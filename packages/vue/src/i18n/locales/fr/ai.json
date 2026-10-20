@@ -289,5 +289,21 @@
   "aiSetupAgentMCPStartFailed": "Le serveur MCP est installé mais n’a pas démarré. Redémarrez OpenPencil, puis vérifiez à nouveau.",
   "aiSetupAgentLookupFailed": "Impossible de vérifier cet ordinateur. Réessayez.",
   "chatAgentWorkingOn": "{agent} travaille sur « {page} »",
-  "chatGoToPage": "Aller à la page"
+  "chatGoToPage": "Aller à la page",
+  "skillsHint": "tapez / pour les skills",
+  "skillsHeader": "Skills {count}",
+  "skillToggle": "Afficher le skill dans l’autocomplétion de /",
+  "skillToggleHidden": "Le skill reste dans les réglages mais est masqué dans /",
+  "skillsTitle": "Skills",
+  "skillsDescription": "Paquets SKILL.md en dossiers que le discussion charge via /. Les skills inclus suivent l’app ; vos importations sont conservées.",
+  "importSkillFile": "Ajouter un fichier…",
+  "importSkillFolder": "Ajouter un dossier…",
+  "importSkillUrl": "Importer",
+  "importSkillUrlPlaceholder": "URL du skill (.zip ou .md)…",
+  "importSkillFailed": "Échec de l’import du skill.",
+  "importSkillEmpty": "Aucun skill trouvé dans cette source.",
+  "deleteSkill": "Supprimer le skill",
+  "deleteSkillConfirmation": "Supprimer le skill « {name} » ?",
+  "deleteSkillDescription": "Le skill et ses fichiers de référence sont retirés de cet appareil. Les skills inclus reviennent au prochain lancement de l’app.",
+  "skillReferences": "{count} fichiers de référence"
 }

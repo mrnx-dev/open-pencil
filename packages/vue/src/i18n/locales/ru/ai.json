@@ -289,5 +289,21 @@
   "aiSetupAgentMCPStartFailed": "MCP-сервер установлен, но не запустился. Перезапустите OpenPencil и проверьте снова.",
   "aiSetupAgentLookupFailed": "Не удалось проверить этот компьютер. Попробуйте снова.",
   "chatAgentWorkingOn": "{agent} работает над «{page}»",
-  "chatGoToPage": "Перейти к странице"
+  "chatGoToPage": "Перейти к странице",
+  "skillsHint": "введите / для навыков",
+  "skillsHeader": "Навыки: {count}",
+  "skillToggle": "Показывать навык в автодополнении «/»",
+  "skillToggleHidden": "Навык останется в настройках, но исчезнет из «/»",
+  "skillsTitle": "Навыки",
+  "skillsDescription": "Пакеты SKILL.md в папках, которые чат загружает через /. Встроенные навыки обновляются вместе с приложением; ваши импорты сохраняются.",
+  "importSkillFile": "Добавить файл…",
+  "importSkillFolder": "Добавить папку…",
+  "importSkillUrl": "Импортировать",
+  "importSkillUrlPlaceholder": "Ссылка на навык (.zip или .md)…",
+  "importSkillFailed": "Не удалось импортировать навык.",
+  "importSkillEmpty": "В этом источнике навыков нет.",
+  "deleteSkill": "Удалить навык",
+  "deleteSkillConfirmation": "Удалить навык «{name}»?",
+  "deleteSkillDescription": "Навык и его справочные файлы удалятся с этого устройства. Встроенные навыки вернутся при следующем запуске приложения.",
+  "skillReferences": "{count} справочных файлов"
 }

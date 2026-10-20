@@ -289,5 +289,21 @@
   "aiSetupAgentMCPStartFailed": "MCP 服务器已安装但未能启动。请重启 OpenPencil，然后重新检查。",
   "aiSetupAgentLookupFailed": "无法检查这台电脑，请重试。",
   "chatAgentWorkingOn": "{agent} 正在处理“{page}”",
-  "chatGoToPage": "转到页面"
+  "chatGoToPage": "转到页面",
+  "skillsHint": "输入 / 调用技能",
+  "skillsHeader": "技能 {count}",
+  "skillToggle": "在 / 自动补全中显示该技能",
+  "skillToggleHidden": "技能仍保留在设置中，但不显示在 / 中",
+  "skillsTitle": "技能",
+  "skillsDescription": "以文件夹组织的 SKILL.md 包，聊天通过 / 加载。内置技能随应用更新；你导入的技能会保留。",
+  "importSkillFile": "添加文件…",
+  "importSkillFolder": "添加文件夹…",
+  "importSkillUrl": "导入",
+  "importSkillUrlPlaceholder": "技能链接（.zip 或 .md）…",
+  "importSkillFailed": "导入技能失败。",
+  "importSkillEmpty": "该来源中没有技能。",
+  "deleteSkill": "删除技能",
+  "deleteSkillConfirmation": "删除技能“{name}”？",
+  "deleteSkillDescription": "该技能及其参考文件将从本机移除。内置技能会在下次启动应用时恢复。",
+  "skillReferences": "{count} 个参考文件"
 }

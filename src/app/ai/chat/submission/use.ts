@@ -11,6 +11,7 @@ import {
   deleteMessageAttachments,
   setMessageAttachments
 } from '@/app/ai/attachment/presentation/store'
+import { appendSkillContext } from '@/app/ai/chat/context'
 import { setVisibleMessageText } from '@/app/ai/chat/presentation'
 import { reportSubmissionError, type SubmissionErrorOptions } from '@/app/ai/chat/submission/errors'
 import { prepareSubmittedImages } from '@/app/ai/chat/submission/images'
@@ -159,7 +160,10 @@ export function useChatSubmission(options: SubmissionOptions) {
         return false
       }
       const note = undone.note(submission.modelText, currentChat.messages)
-      const noted = { ...submission, modelText: note.text }
+      // Skills resolve here, not in the composer: the request carries their content, the
+      // displayed message keeps only the /skill chips the user typed.
+      const modelText = await appendSkillContext(note.text)
+      const noted = { ...submission, modelText }
       const previousIds = new Set(currentChat.messages.map((message) => message.id))
       if (submission.images.length === 0 && submission.nodes.length === 0) {
         await sendText(currentChat, noted, dispatch)
@@ -215,9 +219,10 @@ export function useChatSubmission(options: SubmissionOptions) {
     // Replies after the edited message are replaced; what it reported needs a new report.
     const note = undone.note(trimmed, currentChat.messages.slice(0, index))
     setVisibleMessageText(messageId, trimmed)
+    const modelText = await appendSkillContext(note.text)
     try {
       await withTurn(currentChat, () =>
-        currentChat.sendMessage({ messageId, text: note.text }).catch(() => undefined)
+        currentChat.sendMessage({ messageId, text: modelText }).catch(() => undefined)
       )
       undone.reported(currentChat, note.reports, messageId)
     } finally {

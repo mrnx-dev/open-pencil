@@ -507,3 +507,7 @@ zh-cn:cloud.settingsOfficialDescription
 zh-cn:cloud.settingsSelfHostedDescription
 zh-cn:cloudPortal.errorEmailInvalid
 zh-cn:cloudPortal.verifiedDescription
+ja:ai.skillsDescription
+ja:ai.importSkillUrlPlaceholder
+zh-cn:ai.skillsDescription
+zh-cn:ai.importSkillUrlPlaceholder
