@@ -13,7 +13,8 @@ export async function initCanvasKit(): Promise<CanvasKit> {
   if (cachedCk) return cachedCk
   const CanvasKitInit = (await import('canvaskit-wasm/full')).default
   const ckPath = import.meta.resolve('canvaskit-wasm/full')
-  const binDir = new URL('.', ckPath).pathname
+  let binDir = decodeURIComponent(new URL('.', ckPath).pathname)
+  if (binDir.startsWith('/') && /^[a-zA-Z]:/.test(binDir.slice(1))) binDir = binDir.slice(1)
   cachedCk = await CanvasKitInit({ locateFile: (file: string) => binDir + file })
   return cachedCk
 }
