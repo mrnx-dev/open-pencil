@@ -71,7 +71,12 @@ const maxOutputTokensSchema = v.fallback(
   v.pipe(
     v.number(),
     v.finite(),
-    v.transform((tokens) => Math.min(128_000, Math.max(1024, Math.round(tokens))))
+    // Legacy value 1024 is too small for design JSX; upgrade it to the default floor.
+    v.transform((tokens) => {
+      const n = Math.round(tokens)
+      if (n === 1024) return DEFAULT_MAX_OUTPUT_TOKENS
+      return Math.min(128_000, Math.max(4096, n))
+    })
   ),
   DEFAULT_MAX_OUTPUT_TOKENS
 )
@@ -224,7 +229,7 @@ function legacySettings(): AIModelSettings {
         modelID,
         customModelID,
         maxOutputTokens: Number.isFinite(maxOutputTokens)
-          ? maxOutputTokens
+          ? normalizedMaxOutputTokens(maxOutputTokens)
           : DEFAULT_MAX_OUTPUT_TOKENS,
         thinkingLevel: 'default',
         capabilities: curatedCapabilities ?? ['tools']
