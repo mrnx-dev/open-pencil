@@ -56,7 +56,7 @@ export async function syncBundledSkills() {
         bundledIds.add(record.id)
         continue
       }
-      // A refresh overwrites a stale builtin copy, the way Pencil reinstalls a skills bundle.
+      // A refresh overwrites a stale builtin copy.
       const written = await writeSkill({ ...bundledSkill, source: 'builtin' })
       bundledIds.add(written.id)
     }
