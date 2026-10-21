@@ -2,7 +2,10 @@ import * as v from 'valibot'
 
 import {
   collectionPluginDataNodeChange,
+  figmaFormulaFunction,
   parseGuidOrNull,
+  mapUnsupportedExpressionReferences,
+  unsupportedExpressionData,
   variableAlias,
   variableMetadataNodeChange
 } from '@open-pencil/fig/node-change'
@@ -10,8 +13,10 @@ import type { GUID, NodeChange, VariableDataEntry } from '@open-pencil/kiwi/fig/
 import { guidToString, stringToGuid } from '@open-pencil/kiwi/fig/guid'
 import {
   modesDefaultFirst,
-  MAX_FORMULA_DEPTH,
-  formulaResultType,
+  isUnsupportedVariableValue,
+  foldFormula,
+  formulaValueType,
+  inferFormulaType,
   variableFormulaSchema,
   variableColorExpressionSchema,
   type SceneGraph,
@@ -144,8 +149,21 @@ function variableValueToKiwi(
   graph: SceneGraph,
   value: VariableValue,
   type: string,
-  ids: Map<string, GUID>
+  ids: Map<string, GUID>,
+  modes?: ReadonlyMap<string, GUID>
 ): VariableDataEntry {
+  if (isUnsupportedVariableValue(value)) {
+    const data = unsupportedExpressionData(value.value)
+    mapUnsupportedExpressionReferences(
+      data,
+      (_, index) => {
+        const id = value.references[index]
+        return id && graph.variables.has(id) ? variableAlias(graph, id, ids) : undefined
+      },
+      (guid, index) => modes?.get(value.modes[index] ?? '') ?? guid
+    )
+    return data
+  }
   if (typeof value === 'object' && 'expression' in value && value.expression === 'FORMULA') {
     const formula = v.parse(variableFormulaSchema, value)
     if (formula.type !== type) throw new Error('Formula type does not match variable type')
@@ -190,30 +208,27 @@ function variableValueToKiwi(
 function formulaToKiwi(
   graph: SceneGraph,
   node: VariableFormulaNode,
-  ids: Map<string, GUID>,
-  depth = 0
+  ids: Map<string, GUID>
 ): VariableDataEntry {
-  if (depth > MAX_FORMULA_DEPTH) throw new Error('Variable formula is too deeply nested')
-  if (typeof node === 'number') return variableValueToKiwi(graph, node, 'FLOAT', ids)
-  if (typeof node === 'boolean') return variableValueToKiwi(graph, node, 'BOOLEAN', ids)
-  if ('aliasId' in node) {
-    const type = graph.variables.get(node.aliasId)?.type
-    if (type !== 'FLOAT' && type !== 'BOOLEAN')
-      throw new Error('Formula references a missing variable')
-    return variableValueToKiwi(graph, node, type, ids)
+  const typeOf = (id: string) => graph.variables.get(id)?.type
+  const known = <T>(type: T | undefined) => {
+    if (!type) throw new Error('Formula references a missing variable')
+    return type
   }
-  return {
-    dataType: 'EXPRESSION',
-    resolvedDataType: formulaResultType(node.operator),
-    value: {
-      expressionValue: {
-        expressionFunction: node.operator,
-        expressionArguments: node.operands.map((operand) =>
-          formulaToKiwi(graph, operand, ids, depth + 1)
-        )
+  return foldFormula<VariableDataEntry>(node, {
+    literal: (value) => variableValueToKiwi(graph, value, formulaValueType(value), ids),
+    reference: (id) => variableValueToKiwi(graph, { aliasId: id }, known(typeOf(id)), ids),
+    operation: (operation, operands) => ({
+      dataType: 'EXPRESSION',
+      resolvedDataType: known(inferFormulaType(operation, typeOf)),
+      value: {
+        expressionValue: {
+          expressionFunction: figmaFormulaFunction(operation.operator),
+          expressionArguments: operands
+        }
       }
-    }
-  }
+    })
+  })
 }
 
 /**
@@ -275,7 +290,7 @@ export function appendVariableNodeChanges(
         variableDataValues: {
           entries: Object.entries(variable.valuesByMode).map(([mode, value]) => ({
             modeID: modes.get(mode) ?? stringToGuid(mode),
-            variableData: variableValueToKiwi(graph, value, variable.type, ids)
+            variableData: variableValueToKiwi(graph, value, variable.type, ids, modes)
           }))
         },
         ...variableMetadataNodeChange(variable, modeKey),

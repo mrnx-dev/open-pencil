@@ -137,7 +137,12 @@ export const variablesMessageDefaults = {
   importAction: 'Import',
   formula: 'Formula',
   useFormula: 'Use a formula',
-  formulaPlaceholder: 'Value or formula'
+  formulaPlaceholder: 'Value or formula',
+  formulaFunctions: 'Functions',
+  formulaIf: 'condition, then, otherwise',
+  formulaText: 'number as text',
+  formulaTruthy: 'value as true or false',
+  unsupportedExpression: params('OpenPencil can’t evaluate {name} yet. Saving keeps it as it is.')
 } as const
 
 export const variablesMessages = i18n('variables', variablesMessageDefaults)

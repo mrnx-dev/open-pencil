@@ -15,7 +15,10 @@ export const COLLAB_ACTIONS = {
   syncStep1: 'sync-step1',
   syncReply: 'sync-reply',
   awareness: 'awareness',
-  agentPreview: 'agent-preview'
+  agentPreview: 'agent-preview',
+  upload: 'upload',
+  /** From the server only: the document's version history changed, so open lists load it again. */
+  versions: 'versions'
 } as const
 
 /**
@@ -70,6 +73,14 @@ export function decodeRoomUpdate(
 
 /** The peer ID the relay itself uses: it holds the room's document and answers sync requests. */
 export const RELAY_SERVER_PEER = 'server'
+
+/** The longest name a peer's presence may carry; peers drop presence with a longer one. */
+export const MAX_PRESENCE_NAME_LENGTH = 40
+
+/** A name as presence carries it: trimmed and cut to what every peer accepts. */
+export function presenceName(name: string): string {
+  return name.trim().slice(0, MAX_PRESENCE_NAME_LENGTH)
+}
 
 /**
  * Close codes in the WebSocket application range. A client reconnects with a fresh ticket after

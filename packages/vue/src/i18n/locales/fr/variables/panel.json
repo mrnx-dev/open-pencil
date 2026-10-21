@@ -128,5 +128,10 @@
   "importAction": "Importer",
   "formula": "Formule",
   "useFormula": "Utiliser une formule",
-  "formulaPlaceholder": "Valeur ou formule"
+  "formulaPlaceholder": "Valeur ou formule",
+  "formulaFunctions": "Fonctions",
+  "formulaIf": "condition, alors, sinon",
+  "formulaText": "nombre en texte",
+  "formulaTruthy": "valeur en vrai ou faux",
+  "unsupportedExpression": "OpenPencil ne sait pas encore évaluer {name}. L’enregistrement le conserve tel quel."
 }

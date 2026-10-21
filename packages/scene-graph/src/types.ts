@@ -4,6 +4,7 @@ import type { ExportFormatId } from './export-format'
 import type { CanvasGuide } from './guides'
 import type { InstanceOverrideState } from './instance-overrides'
 import type { Color, Matrix, Rect, Vector } from './primitives'
+import type { ShapeWithTextType } from './shape-with-text/kinds'
 
 export interface SceneGraphEvents {
   'node:created': (node: SceneNode) => void
@@ -423,8 +424,11 @@ export interface PluginRelaunchDataEntry {
 export interface TextPathData {
   network: VectorNetwork
   normalizedSize: Vector
+  /** Where on the start segment the text starts, from 0 at its start to 1 at its end. */
   tValue: number
   forward: boolean
+  /** The segment the text starts on, which Figma marks in the network blob; 0 when unmarked. */
+  startSegment?: number
 }
 
 export interface DerivedTextGlyph {
@@ -733,6 +737,12 @@ export interface SceneNode {
 
   pointCount: number
   starInnerRadius: number
+  /** The FigJam kind a SHAPE_WITH_TEXT draws; its label is the node's own text. */
+  shapeWithTextType: ShapeWithTextType
+  /** The height a shape with text was given; it grows past it to fit its label. 0 is unset. */
+  shapeUserHeight: number
+  /** The width a shape with text was given; it widens past it only for a word too wide. 0 is unset. */
+  shapeUserWidth: number
 
   componentId: string | null
   instanceOverrides: InstanceOverrideState
@@ -838,42 +848,57 @@ export interface VariableColorExpression {
 }
 
 export type VariableLiteral = Color | number | string | boolean
-/** Figma's `ExpressionFunction` names for the arithmetic, comparison and logic a formula uses. */
+/** The arithmetic, comparison, logic and conversions a formula combines values with. */
 export const VARIABLE_FORMULA_OPERATORS = [
-  'ADDITION',
-  'SUBTRACTION',
-  'MULTIPLY',
-  'DIVIDE',
-  'NEGATE',
-  'EQUALS',
-  'NOT_EQUAL',
-  'LESS_THAN',
-  'LESS_THAN_OR_EQUAL',
-  'GREATER_THAN',
-  'GREATER_THAN_OR_EQUAL',
-  'AND',
-  'OR',
-  'NOT'
+  'add',
+  'subtract',
+  'multiply',
+  'divide',
+  'negate',
+  'equal',
+  'notEqual',
+  'less',
+  'lessOrEqual',
+  'greater',
+  'greaterOrEqual',
+  'and',
+  'or',
+  'not',
+  'text',
+  'truthy',
+  'if'
 ] as const
 export type VariableFormulaOperator = (typeof VARIABLE_FORMULA_OPERATORS)[number]
-export type VariableFormulaNode =
-  | number
-  | boolean
-  | VariableAlias
-  | {
-      operator: VariableFormulaOperator
-      operands: VariableFormulaNode[]
-    }
+export interface VariableFormulaOperation {
+  operator: VariableFormulaOperator
+  operands: VariableFormulaNode[]
+}
+export type VariableFormulaNode = VariableLiteral | VariableAlias | VariableFormulaOperation
 export interface VariableFormula {
   expression: 'FORMULA'
-  type: 'FLOAT' | 'BOOLEAN'
+  type: VariableType
   value: VariableFormulaNode
+}
+/**
+ * An imported expression OpenPencil cannot evaluate, kept as the file wrote it so saving writes it
+ * back. `references` holds one entry per alias in `value`, in the order the format walks them, and
+ * `null` where the alias names a variable this document does not have. `modes` holds the mode id of
+ * each mode key in `value`, in the same walk order.
+ */
+export interface VariableUnsupportedExpression {
+  expression: 'UNSUPPORTED'
+  /** The function name the file gives, such as `VAR_MODE_LOOKUP`. */
+  function: string
+  value: Record<string, unknown>
+  references: (string | null)[]
+  modes: string[]
 }
 export type VariableValue =
   | VariableLiteral
   | VariableAlias
   | VariableColorExpression
   | VariableFormula
+  | VariableUnsupportedExpression
 export type VariableModeMap = Record<string, string>
 
 /** Property pickers a variable is offered in, as Figma names them. */

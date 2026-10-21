@@ -1,7 +1,12 @@
 import { compact } from 'es-toolkit/array'
 
 import { jsx, type SyntaxNode } from '@open-pencil/emit'
-import type { NodeType, SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+import {
+  isGeneratedFrame,
+  type GeneratedFrameType,
+  type SceneGraph,
+  type SceneNode
+} from '@open-pencil/scene-graph'
 
 import {
   connectorExportScope,
@@ -11,10 +16,11 @@ import {
   type ConnectorExportScope
 } from '../connectors'
 import { elementTag } from '../elements'
-import { stickyBody, stickyName, stickyProps } from '../stickies'
+import { shapeWithTextLabelText, shapeWithTextProps } from '../shapes-with-text'
+import { stickyBody, stickyProps } from '../stickies'
 import { rekaExport, type RekaExport } from './behaviours'
 import { iconProps } from './icons'
-import { collectProps, positionProps } from './props'
+import { collectProps, positionProps, presenceProps } from './props'
 import { textChildren } from './text'
 import { plainValue, propAttribute, Reference, type JSXProp } from './value'
 
@@ -60,21 +66,40 @@ interface OwnElement {
   text: string
 }
 
-/** The layers whose elements take props of their own rather than the layer props. */
-const OWN_ELEMENTS: Partial<
-  Record<NodeType, (graph: SceneGraph, node: SceneNode, scope?: ConnectorExportScope) => OwnElement>
+/**
+ * The name an element named by its text writes: none while the layer still follows its text, and
+ * its name once renamed, even to its text, so reading it back keeps the name from following it.
+ */
+function textNamedName(node: SceneNode): JSXProp[] {
+  return node.autoRename ? [] : [['name', node.name]]
+}
+
+/**
+ * The layers whose elements take props of their own rather than the layer props: every generated
+ * frame, whose sublayers its element writes as props and text.
+ */
+const OWN_ELEMENTS: Record<
+  GeneratedFrameType,
+  (graph: SceneGraph, node: SceneNode, scope?: ConnectorExportScope) => OwnElement
 > = {
-  STICKY: (graph, node) => {
-    const name = stickyName(node)
-    return {
-      props: [
-        ...(name ? [['name', name] satisfies JSXProp] : []),
-        ...positionProps(node, graph),
-        ...stickyProps(graph, node).map(([key, value]): JSXProp => [key, plainValue(value)])
-      ],
-      text: stickyBody(graph, node)
-    }
-  },
+  STICKY: (graph, node) => ({
+    props: [
+      ...textNamedName(node),
+      ...positionProps(node, graph),
+      ...stickyProps(graph, node).map(([key, value]): JSXProp => [key, plainValue(value)]),
+      ...presenceProps(node)
+    ],
+    text: stickyBody(graph, node)
+  }),
+  SHAPE_WITH_TEXT: (graph, node) => ({
+    props: [
+      ...textNamedName(node),
+      ...positionProps(node, graph),
+      ...shapeWithTextProps(graph, node),
+      ...presenceProps(node)
+    ],
+    text: shapeWithTextLabelText(graph, node)
+  }),
   CONNECTOR: (graph, node, scope) => ({
     props: connectorProps(graph, node, scope).map(([key, value]): JSXProp => [
       key,
@@ -82,6 +107,15 @@ const OWN_ELEMENTS: Partial<
     ]),
     text: connectorLabel(graph, node)
   })
+}
+
+/** What a layer whose element takes props of its own writes, or undefined for another layer. */
+function ownElement(
+  graph: SceneGraph,
+  node: SceneNode,
+  scope?: ConnectorExportScope
+): OwnElement | undefined {
+  return isGeneratedFrame(node) ? OWN_ELEMENTS[node.type](graph, node, scope) : undefined
 }
 
 /** The layers an export writes, by the roots it starts from. */
@@ -113,7 +147,7 @@ function nodeToJSX(
   const tag = reka.tags.get(node.id) ?? elementTag(node.type)
   if (!tag) return []
   layerIds?.push(node.id)
-  const own = OWN_ELEMENTS[node.type]?.(graph, node, scope)
+  const own = ownElement(graph, node, scope)
   if (own) {
     const children = own.text ? [jsx.text(own.text)] : []
     return [jsx.element(tag, own.props.map(propAttribute), children, depth, true)]
@@ -153,7 +187,7 @@ export function sceneNodeAttributes(
 ): JSXAttributeSource[] | null {
   const node = graph.getNode(nodeId)
   if (!node || !elementTag(node.type)) return null
-  const own = OWN_ELEMENTS[node.type]?.(graph, node)
+  const own = ownElement(graph, node)
   const props = own ? own.props : collectProps(node, graph)
   if (node.type === 'TEXT') props.push(['text', node.text])
   if (own?.text) props.push(['text', own.text])
@@ -194,7 +228,7 @@ export function designJSXElement(nodeId: string, graph: SceneGraph): DesignJSXEl
   if (!node || !tag || !printed) return null
   // A text layer's content, a connector's label, or a sticky note's body is written as its
   // children, not as the `text` attribute; the layers they generate are not written at all.
-  const own = OWN_ELEMENTS[node.type]
+  const own = ownElement(graph, node)
   const hasContent = node.type === 'TEXT' || own !== undefined
   const attributes = Object.fromEntries(
     printed
@@ -206,8 +240,7 @@ export function designJSXElement(nodeId: string, graph: SceneGraph): DesignJSXEl
     return { tag, attributes, text: contentBetween(tag, children, inline), childIds: [] }
   }
   if (own) {
-    const { text } = own(graph, node)
-    const children = text ? [jsx.text(text)] : []
+    const children = own.text ? [jsx.text(own.text)] : []
     return { tag, attributes, text: contentBetween(tag, children, true), childIds: [] }
   }
   const childIds = graph

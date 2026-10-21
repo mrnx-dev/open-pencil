@@ -256,10 +256,19 @@ function clearExpression(modeId: string) {
   commitExpression(modeId, '')
 }
 
-/** Numbers and true/false values edit in the value editor, which takes formulas. */
-const editsValues = computed(
-  () => Boolean(formula) && (variable.value.type === 'FLOAT' || variable.value.type === 'BOOLEAN')
-)
+/**
+ * Values edit in the value editor, which takes formulas: numbers and true/false values always,
+ * and text and colors when they are written as they are or as a formula, since a text or color
+ * variable keeps its pill and a composed color its swatch.
+ */
+function usesValueEditor(modeId: string) {
+  if (!formula) return false
+  if (variable.value.type === 'FLOAT' || variable.value.type === 'BOOLEAN') return true
+  const value = variable.value.valuesByMode[modeId]
+  if (value === undefined || typeof value !== 'object') return value !== undefined
+  if ('aliasId' in value) return false
+  return !('expression' in value) || value.expression === 'FORMULA'
+}
 
 function hasScope(scope: VariableScope) {
   return variable.value.scopes?.includes(scope) ?? false
@@ -273,6 +282,11 @@ function toggleScope(scope: VariableScope, on: boolean) {
 
 function alias(modeId: string) {
   return row.values.find((value) => value.modeId === modeId)?.alias
+}
+
+/** A function from the file OpenPencil cannot evaluate; that mode's value is read-only. */
+function unsupported(modeId: string) {
+  return row.values.find((value) => value.modeId === modeId)?.unsupported
 }
 
 /** The color an aliased value resolves to, shown beside the variable as the panel does. */
@@ -357,13 +371,23 @@ function cssNameDone(event: KeyboardEvent) {
 
     <section :class="ui.section()">
       <!-- A value editor heads itself, its tools on its label's row; the section title is for several. -->
-      <h3 v-if="!editsValues || !singleMode" :class="ui.title()">
+      <h3 v-if="!singleMode || !usesValueEditor(collection.defaultModeId)" :class="ui.title()">
         {{ singleMode ? variables.value : variables.values }}
       </h3>
       <div v-for="mode in collection.modes" :key="mode.modeId" :class="ui.value()">
-        <span v-if="!editsValues && !singleMode" :class="ui.label()">{{ mode.name }}</span>
+        <span
+          v-if="!singleMode && (!usesValueEditor(mode.modeId) || unsupported(mode.modeId))"
+          :class="ui.label()"
+          >{{ mode.name }}</span
+        >
+        <Tip
+          v-if="unsupported(mode.modeId)"
+          :label="variables.unsupportedExpression({ name: unsupported(mode.modeId) ?? '' })"
+        >
+          <span :class="ui.hint()">{{ unsupported(mode.modeId) }}(…)</span>
+        </Tip>
         <TokenValueEditor
-          v-if="editsValues && formula"
+          v-else-if="usesValueEditor(mode.modeId) && formula"
           :variable="variable"
           :mode-id="mode.modeId"
           :label="singleMode ? variables.value : mode.name"
@@ -376,6 +400,23 @@ function cssNameDone(event: KeyboardEvent) {
           @add-expression="addExpression(mode.modeId)"
           @remove-expression="clearExpression(mode.modeId)"
         >
+          <template #control>
+            <ColorInput
+              v-if="color(mode.modeId)"
+              :color="color(mode.modeId) ?? { r: 0, g: 0, b: 0, a: 1 }"
+              editable
+              @update="emit('updateValue', mode.modeId, $event, colorGesture(mode.modeId))"
+              @open-change="setPickerOpen(mode.modeId, $event)"
+            />
+            <AppInput
+              v-else
+              v-model="draft.values[mode.modeId]"
+              :aria-label="singleMode ? variables.value : mode.name"
+              size="sm"
+              @change="commitValue(mode.modeId)"
+              @enter="done"
+            />
+          </template>
           <template #below>
             <TokenCSSExpression
               v-if="showsExpression(mode.modeId)"
