@@ -77,3 +77,56 @@ test('a pasted skill takes its frontmatter name and records the source', async (
     content: DESIGNER_SKILL
   })
 })
+
+const PEN_SKILL = `---
+name: pen-flow
+description: Draw with the pen.
+---
+# Pen flow`
+
+test('nested skill folders group by the folder that directly owns their SKILL.md', () => {
+  const skills = skillsFromMarkdownTree({
+    'skills/better-ui/SKILL.md': '# Better UI\nNo frontmatter name.',
+    'skills/better-ui/guides/colors.md': '# Colors',
+    'skills/pen-flow/docs/steps.md': '# Steps',
+    'skills/pen-flow/SKILL.md': PEN_SKILL,
+    'assets/logo.md': '# Logo'
+  })
+  const byName = new Map(skills.map((skill) => [skill.name, skill]))
+  expect(byName.get('better-ui')).toEqual({
+    name: 'better-ui',
+    description: undefined,
+    content: '# Better UI\nNo frontmatter name.',
+    refs: { 'guides/colors.md': '# Colors' }
+  })
+  expect(byName.get('pen-flow')).toMatchObject({
+    content: PEN_SKILL,
+    refs: { 'docs/steps.md': '# Steps' }
+  })
+  expect(byName.get('logo')?.content).toBe('# Logo')
+})
+
+test('a GitHub-style zip wrapper imports each nested skill with its refs and name', async () => {
+  const zip = zipSync({
+    'repo-main/skills/better-ui/SKILL.md': new TextEncoder().encode(DESIGNER_SKILL),
+    'repo-main/skills/better-ui/guide/recipes.md': new TextEncoder().encode('# Recipes'),
+    'repo-main/README.md': new TextEncoder().encode('# Repo')
+  })
+  const count = await importFromFiles([new File([zip], 'bundle.zip')])
+  expect(count).toBe(2)
+  const designer = await getSkill('designer')
+  expect(designer?.refs).toEqual({ 'guide/recipes.md': '# Recipes' })
+  expect((await listSkills()).map((skill) => skill.id).sort()).toEqual(['designer', 'readme'])
+})
+
+test('a tree mixing a root SKILL.md, nested skills, and loose files splits cleanly', () => {
+  const skills = skillsFromMarkdownTree({
+    'SKILL.md': PEN_SKILL,
+    'misc/notes.md': '# Notes',
+    'deep/nested/only/SKILL.md': DESIGNER_SKILL
+  })
+  const byName = new Map(skills.map((skill) => [skill.name, skill]))
+  expect(byName.get('pen-flow')?.content).toBe(PEN_SKILL)
+  expect(byName.get('notes')?.content).toBe('# Notes')
+  expect(byName.get('designer')?.content).toBe(DESIGNER_SKILL)
+})

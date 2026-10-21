@@ -10,37 +10,51 @@ function normalizePath(path: string): string {
 }
 
 /**
- * A tree of markdown files becomes one skill per folder that owns a SKILL.md; its sibling files
- * become reference files keyed by their path inside the folder. Standalone root SKILL.md and loose
- * single .md files (a zip without folders, pasted text) stay flat skills.
+ * A tree of markdown files becomes one skill per folder that directly owns a SKILL.md, at any
+ * depth; its files below become reference files keyed by their path inside that folder. A root
+ * SKILL.md and .md files outside any skill folder stay flat skills.
  */
 export function skillsFromMarkdownTree(tree: Record<string, string>): SkillFolder[] {
+  const files = Object.entries(tree).map(([rawPath, content]) => {
+    const path = normalizePath(rawPath)
+    return { path, parts: path.split('/'), content }
+  })
+  // Only a directory that directly contains a SKILL.md owns a skill; files elsewhere stay loose.
+  const skillFolders = new Set(
+    files
+      .filter(({ parts }) => parts.length > 1 && parts.at(-1) === 'SKILL.md')
+      .map(({ parts }) => parts.slice(0, -1).join('/'))
+  )
   const groups = new Map<string, { content?: string; refs: Record<string, string> }>()
   const loose: { path: string; content: string }[] = []
-  for (const [rawPath, content] of Object.entries(tree)) {
-    const path = normalizePath(rawPath)
-    const folder = path.includes('/') ? path.slice(0, path.indexOf('/')) : ''
-    const rest = folder ? path.slice(folder.length + 1) : path
-    if (!folder) {
-      // Root SKILL.md, or a loose file: each becomes its own skill.
-      loose.push({ path: rest, content })
+  for (const { path, parts, content } of files) {
+    // A folder only owns a SKILL.md that it directly contains, so nested skills group separately.
+    let owner: string | undefined
+    if (parts.length > 1) {
+      for (let i = parts.length - 1; i >= 1; i--) {
+        const dir = parts.slice(0, i).join('/')
+        if (skillFolders.has(dir)) {
+          owner = dir
+          break
+        }
+      }
+    }
+    if (!owner) {
+      loose.push({ path, content })
       continue
     }
-    let group = groups.get(folder)
-    if (!group) groups.set(folder, (group = { refs: {} }))
-    if (rest === 'SKILL.md') group.content = content
-    else group.refs[rest] = content
+    let group = groups.get(owner)
+    if (!group) groups.set(owner, (group = { refs: {} }))
+    const rel = path.slice(owner.length + 1)
+    if (rel === 'SKILL.md') group.content = content
+    else group.refs[rel] = content
   }
   const skills: SkillFolder[] = []
-  for (const [name, group] of groups) {
-    if (!group.content) {
-      // No SKILL.md in the folder: keep the files as loose skills so nothing importable is lost.
-      for (const [path, content] of Object.entries(group.refs)) loose.push({ path, content })
-      continue
-    }
+  for (const [folder, group] of groups) {
+    if (!group.content) continue // Owners always have a SKILL.md by construction.
     const parsed = parseSkillMarkdown(group.content)
     skills.push({
-      name: parsed.name ?? name,
+      name: parsed.name ?? folder.slice(folder.lastIndexOf('/') + 1),
       content: group.content,
       description: parsed.description,
       refs: group.refs
@@ -50,7 +64,7 @@ export function skillsFromMarkdownTree(tree: Record<string, string>): SkillFolde
     if (!MARKDOWN.test(path)) continue
     const parsed = parseSkillMarkdown(content)
     skills.push({
-      name: parsed.name ?? path.replace(MARKDOWN, ''),
+      name: parsed.name ?? path.slice(path.lastIndexOf('/') + 1).replace(MARKDOWN, ''),
       content,
       description: parsed.description,
       refs: {}
