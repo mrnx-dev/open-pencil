@@ -33,8 +33,8 @@ Open **Settings → AI** and find the **Skills** section. Import from:
 - **File:** a `.zip` archive of one or more skills, or a single markdown file.
 - **Folder:** a directory containing a `SKILL.md` plus sibling reference files.
 
-Imported files follow a simple layout: each folder with a `SKILL.md` becomes one skill, including
-markdown files beside it become its references. `SKILL.md` starts with two frontmatter fields, `name`
+Imported files follow a simple layout: each folder with a `SKILL.md` becomes one skill at any nesting
+depth, and markdown files beside it become its references. `SKILL.md` starts with two frontmatter fields, `name`
 and a one-line `description`, followed by the instructions themselves:
 
 ```markdown
