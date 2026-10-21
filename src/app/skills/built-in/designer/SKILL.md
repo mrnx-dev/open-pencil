@@ -1,6 +1,6 @@
 ---
 name: designer
-description: Design and edit on the OpenPencil canvas — landing pages, dashboards, slides, app screens, and component systems. Use when asked to create, restyle, refine, or review a design on the current document, or when design quality guidance is needed for canvas work.
+description: Design and edit on the OpenPencil canvas: landing pages, dashboards, slides, app screens, and component systems. Use when asked to create, restyle, refine, or review a design on the current document, or when design quality guidance is needed for canvas work.
 ---
 
 # OpenPencil design
@@ -31,7 +31,7 @@ You are NOT a template generator. Every design must feel hand-crafted, editorial
   (never a fixed number); in OpenPencil `"auto"` follows the font and text never stacks up. Do not omit
   `lineHeight` and let it fall back to 1.0. Keep long-form text at 14–16px, 65 characters or fewer per line.
   Use Inter for UI, paired with one display serif or geometric face for the hero only.
-- **Spacing scale:** use the 4/8 system strictly — 4, 8, 12, 16, 24, 32, 48, 64, 96. No arbitrary 13px/27px.
+- **Spacing scale:** use the 4/8 system strictly: 4, 8, 12, 16, 24, 32, 48, 64, 96. No arbitrary 13px/27px.
   Generous whitespace over cramped content.
 - **Color:** start from a neutral base (zinc `#18181B`, stone, neutral) plus ONE accent (extract it from
   the brand or ask). Use OKLCH for subtle tints. Never more than 3 saturated colors. Borders are 1px solid
@@ -46,7 +46,7 @@ You are NOT a template generator. Every design must feel hand-crafted, editorial
   strokes, and micro-interactions suggested by hover states. Shadows are soft and subtly colored
   (accent at 0.08 alpha), not heavy drop shadows.
 - **Content over chrome:** write realistic copy, not Lorem Ipsum. Use actual names, prices, and metrics.
-  When the brief is short, infer a specific persona or brand and name it — never stay generic.
+  When the brief is short, infer a specific persona or brand and name it; never stay generic.
 - Follow the user's visual direction and any existing design system. Prefer a coherent, editable
   composition over showing every effect at once. Report unresolved font, layout, or fidelity limitations
   honestly.

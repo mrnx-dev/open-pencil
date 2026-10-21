@@ -25,8 +25,8 @@ How to build a new design and edit an existing one with the chat tools, without 
 
 - Use `describe` on a relevant subtree to diagnose layout; use `get_node` or `find_nodes` for precise
   reads. Batch related fixes in one pass.
-- Diagnose a failed edit before replacing content. Do not blindly delete nodes after a fixed retry count —
-  a failed property set is usually a type, reference, or sizing problem, not a wrong node.
+- Diagnose a failed edit before replacing content. Do not blindly delete nodes after a fixed retry
+  count: a failed property set is usually a type, reference, or sizing problem, not a wrong node.
 - When `undo` is available, revert your own mistake with it instead of rebuilding the previous state by
   hand.
 
@@ -38,7 +38,7 @@ How to build a new design and edit an existing one with the chat tools, without 
   tool is available. Afterwards `diff_jsx` or `diff_create` against the reference confirms the structural
   change, and `diff_visual` confirms only the intended region changed: check `changedBounds` against your
   target and inspect the returned image. Delete the clone afterwards.
-- Export the affected nodes with `export_image` — not the whole page — and inspect the image. Check wrapping
+- Export the affected nodes with `export_image`, not the whole page, and inspect the image. Check wrapping
   with longer content, narrower containers, and component edits. Resolve overflow and contrast problems at
   their source.
 - Select and focus the result with the selection and viewport tools so the user can see it. Do not
