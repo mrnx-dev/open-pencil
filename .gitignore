@@ -1,4 +1,3 @@
-/.superpowers
 # Dependencies
 node_modules/
 
@@ -90,6 +89,9 @@ scratch/
 
 # OpenCode
 .opencode/
+
+# Superpowers
+/.superpowers
 
 # Feedback Worker local state and secrets
 packages/feedback/.wrangler/
