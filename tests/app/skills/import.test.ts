@@ -4,7 +4,8 @@ import { afterEach, expect, test } from 'bun:test'
 import { zipSync } from 'fflate'
 
 import { importFromFiles, importFromText, skillsFromMarkdownTree } from '@/app/skills/import'
-import { clearSkills, getSkill, listSkills } from '@/app/skills/store'
+import { parseSkillMarkdown } from '@/app/skills/parse'
+import { clearSkills, getSkill, listSkills, writeSkill } from '@/app/skills/store'
 
 afterEach(async () => {
   await clearSkills()
@@ -129,4 +130,19 @@ test('a tree mixing a root SKILL.md, nested skills, and loose files splits clean
   expect(byName.get('pen-flow')?.content).toBe(PEN_SKILL)
   expect(byName.get('notes')?.content).toBe('# Notes')
   expect(byName.get('designer')?.content).toBe(DESIGNER_SKILL)
+})
+
+test('an import colliding with a builtin skill keeps the builtin and derives a unique id', async () => {
+  await writeSkill({ ...parseSkillMarkdown(DESIGNER_SKILL), name: 'designer', source: 'builtin', refs: { 'guide.md': '# G' } })
+  await importFromFiles([new File([DESIGNER_SKILL], 'designer.md')])
+  const skills = await listSkills()
+  const ids = skills.map((skill) => skill.id).sort()
+  expect(ids).toEqual(['designer', 'designer-2'])
+  const builtin = skills.find((skill) => skill.id === 'designer')
+  expect(builtin?.source).toBe('builtin')
+  expect(builtin?.refs).toEqual({ 'guide.md': '# G' })
+  expect(skills.find((skill) => skill.id === 'designer-2')).toMatchObject({
+    source: 'file',
+    content: DESIGNER_SKILL
+  })
 })

@@ -45,8 +45,15 @@ export async function writeSkill(input: {
   source: SkillRecord['source']
 }): Promise<SkillRecord> {
   const db = await getDB()
-  const id = normalizeId(input.name)
-  const existing = await db.get(STORE, id)
+  let id = normalizeId(input.name)
+  let existing = await db.get(STORE, id)
+  if (existing?.source === 'builtin' && input.source !== 'builtin') {
+    // The builtin record must survive seed sync, so an import gets a unique suffixed id.
+    existing = undefined
+    let n = 2
+    while (await db.get(STORE, `${id}-${n}`)) n += 1
+    id = `${id}-${n}`
+  }
   const now = Date.now()
   const record: SkillRecord = {
     id,
