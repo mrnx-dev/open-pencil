@@ -4,7 +4,7 @@ How the built-in AI chat turns a message into edits, how a reply ends, and how w
 
 ## A message goes out
 
-`src/app/ai/chat/submission/use.ts` sends a message through the AI SDK's `Chat`. Before sending, it appends notes for the model to the text: the layers you referenced, the edits you undid or redid since the model last heard, and the saved skills each `/skill:<name>` chip names (`context.ts`). A skill note carries that skill's SKILL.md content; the composer chip stays what you typed, and if a skill links reference files the note says to load them with `read_skill_reference`. The transcript shows only what you wrote; `stripModelNotes` removes the notes. Notes go on the newest message only. Earlier messages never change, so the provider can keep caching the conversation up to the new message.
+`src/app/ai/chat/submission/use.ts` sends a message through the AI SDK's `Chat`. Before sending, it appends notes for the model to the text: the layers you referenced, the edits you undid or redid since the model last heard, and the saved skills each `/skill:<name>` chip names (`context.ts`). A skill note carries that skill's SKILL.md content; the composer chip stays what you typed, and if a skill links reference files the note says to load them with `read_skill_reference`. Installing, importing, and showing or hiding skills is covered in [Skills](/user-guide/skills). The transcript shows only what you wrote; `stripModelNotes` removes the notes. Notes go on the newest message only. Earlier messages never change, so the provider can keep caching the conversation up to the new message.
 
 `history/continuation.ts` (`requestMessages`) leaves tool calls without a result out of the request. They stay in the saved transcript.
 

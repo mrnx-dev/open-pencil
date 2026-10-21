@@ -15,6 +15,9 @@ designs through tools: `render` writes a design JSX tree, `replace_id` swaps an 
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
 | Design authoring   | The renderer's design JSX schema: layout, paint, text, variables, components, and controls. Required to read before any `render`. | [design-authoring.md](./design-authoring.md)     |
 | Render and replace | The `render` → `replace_id` → diff workflow for building and editing designs safely. Required to read.                            | [render-and-replace.md](./render-and-replace.md) |
+| Compositions       | Ready-made section recipes for landing pages, app screens, dashboards, and slides, with JSX examples. Optional.                   | [compositions.md](./compositions.md)             |
+| Variables          | When to bind variables instead of hardcoding values, and the collection, mode, and binding workflow. Optional.                    | [variables.md](./variables.md)                   |
+| Verify             | The render → export → inspect loop, structural diagnostics, and design audit tools. Optional.                                     | [verify.md](./verify.md)                         |
 
 ## Design taste
 

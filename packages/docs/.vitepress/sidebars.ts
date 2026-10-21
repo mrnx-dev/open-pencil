@@ -55,6 +55,8 @@ export const userGuideSidebar = (
       { text: labels.variables, link: `${prefix}/user-guide/variables` },
       // English only until translated; locales link to the canonical page.
       { text: labels.checkingDesigns, link: '/user-guide/checking-designs' },
+      // English only until translated; locales link to the canonical page.
+      { text: labels.skills, link: '/user-guide/skills' },
     ],
   },
 ]
