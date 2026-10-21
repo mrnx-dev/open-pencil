@@ -298,8 +298,6 @@
   "skillsDescription": "Пакеты SKILL.md в папках, которые чат загружает через /. Встроенные навыки обновляются вместе с приложением; ваши импорты сохраняются.",
   "importSkillFile": "Добавить файл…",
   "importSkillFolder": "Добавить папку…",
-  "importSkillUrl": "Импортировать",
-  "importSkillUrlPlaceholder": "Ссылка на навык (.zip или .md)…",
   "importSkillFailed": "Не удалось импортировать навык.",
   "importSkillEmpty": "В этом источнике навыков нет.",
   "deleteSkill": "Удалить навык",

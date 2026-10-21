@@ -32,9 +32,8 @@ Open **Settings → AI** and find the **Skills** section. Import from:
 
 - **File:** a `.zip` archive of one or more skills, or a single markdown file.
 - **Folder:** a directory containing a `SKILL.md` plus sibling reference files.
-- **URL:** a link to a `.zip` bundle or a single markdown file, fetched at import time.
 
-Imported folders follow a simple layout: each folder with a `SKILL.md` becomes one skill, and other
+Imported files follow a simple layout: each folder with a `SKILL.md` becomes one skill, including
 markdown files beside it become its references. `SKILL.md` starts with two frontmatter fields, `name`
 and a one-line `description`, followed by the instructions themselves:
 
@@ -53,7 +52,7 @@ The description is what the model sees when deciding a skill applies, so make it
 ## Managing skills
 
 The Settings list shows each skill's name, description (or its `/skill:` name), how many reference
-files it links, and where it came from: bundled, zip, folder, file, or URL.
+files it links, and where it came from: bundled, zip, folder, or file.
 
 - **Show / hide:** the eye toggle hides a skill from the `/` autocomplete. A hidden skill still
   works when you type its `/skill:<name>` chip by hand.

@@ -298,8 +298,6 @@
   "skillsDescription": "Paquetes SKILL.md con carpetas que el chat carga con /. Los skills incluidos se actualizan con la app; tus importaciones se conservan.",
   "importSkillFile": "Añadir archivo…",
   "importSkillFolder": "Añadir carpeta…",
-  "importSkillUrl": "Importar",
-  "importSkillUrlPlaceholder": "URL del skill (.zip o .md)…",
   "importSkillFailed": "No se pudo importar el skill.",
   "importSkillEmpty": "No se encontraron skills en esa fuente.",
   "deleteSkill": "Eliminar skill",

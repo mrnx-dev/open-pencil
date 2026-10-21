@@ -4,20 +4,18 @@ import { onMounted, ref } from 'vue'
 import { useI18n } from '@open-pencil/vue'
 
 import { toast } from '@/app/shell/ui'
-import { importFromFiles, importFromURL } from '@/app/skills/import'
+import { importFromFiles } from '@/app/skills/import'
 import { deleteSkill, listSkills, setSkillEnabled, type SkillRecord } from '@/app/skills/store'
 import SettingsSection from '@/components/settings/layout/SettingsSection.vue'
 import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import { AppConfirmationDialog } from '@/components/ui/dialog'
-import AppInput from '@/components/ui/input/AppInput.vue'
 import AppActionRow from '@/components/ui/list/AppActionRow.vue'
 
 const { ai, common } = useI18n()
 
 const skills = ref<SkillRecord[]>([])
 const importing = ref(false)
-const url = ref('')
 const fileInput = ref<HTMLInputElement>()
 const folderInput = ref<HTMLInputElement>()
 const pendingDelete = ref<SkillRecord>()
@@ -36,23 +34,14 @@ async function importPicked(event: Event): Promise<void> {
   await runImport(() => importFromFiles(files))
 }
 
-async function importURL(): Promise<void> {
-  let target: URL
-  try {
-    target = new URL(url.value)
-  } catch {
-    return // Not a URL yet: the field stays so the user can finish it.
-  }
-  await runImport(() => importFromURL(target.href))
-}
-
 async function runImport(imported: () => Promise<number>): Promise<void> {
   importing.value = true
   try {
     await imported()
-    url.value = ''
     await refresh()
-  } catch {
+  } catch (error) {
+    // The toast stays generic; the console carries the underlying cause.
+    console.error(error)
     toast.error(ai.value.importSkillFailed)
   } finally {
     importing.value = false
@@ -121,23 +110,6 @@ function dismissDelete(open?: boolean): void {
       data-test-id="settings-skill-folder-input"
       @change="importPicked"
     />
-
-    <div class="flex items-center gap-2" data-test-id="settings-skill-url">
-      <AppInput
-        v-model="url"
-        type="text"
-        :placeholder="ai.importSkillUrlPlaceholder"
-        :ui="{ root: 'max-w-72' }"
-        @keydown.enter="importURL"
-      />
-      <AppButton
-        :disabled="importing || url.trim() === ''"
-        data-test-id="settings-skill-import-url"
-        @click="importURL"
-      >
-        {{ ai.importSkillUrl }}
-      </AppButton>
-    </div>
 
     <div class="flex flex-col gap-1.5" data-test-id="settings-skill-list">
       <AppActionRow

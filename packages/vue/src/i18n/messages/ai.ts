@@ -138,8 +138,6 @@ export const aiMessageDefaults = {
     'Foldered SKILL.md packages the chat loads through /skill. Bundled skills refresh with the app; your imports are kept.',
   importSkillFile: 'Add file…',
   importSkillFolder: 'Add folder…',
-  importSkillUrl: 'Import',
-  importSkillUrlPlaceholder: 'Skill URL (.zip or .md)…',
   importSkillFailed: 'Importing the skill failed.',
   importSkillEmpty: 'No skills were found in that source.',
   deleteSkill: 'Delete skill',

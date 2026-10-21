@@ -298,8 +298,6 @@
   "skillsDescription": "/ で読み込むフォルダ単位の SKILL.md パッケージ。同梱スキルはアプリとともに更新され、インポートしたスキルは保持されます。",
   "importSkillFile": "ファイルを追加…",
   "importSkillFolder": "フォルダーを追加…",
-  "importSkillUrl": "インポート",
-  "importSkillUrlPlaceholder": "スキルの URL (.zip または .md)…",
   "importSkillFailed": "スキルのインポートに失敗しました。",
   "importSkillEmpty": "そのソースにはスキルが見つかりません。",
   "deleteSkill": "スキルを削除",

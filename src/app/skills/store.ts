@@ -8,7 +8,7 @@ export interface SkillRecord {
   refs?: Record<string, string> // bundled sibling reference files, keyed like the SKILL.md's relative links
   /** False hides the skill from /skill autocomplete while keeping its chip injectable. */
   enabled?: boolean
-  source: 'zip' | 'folder' | 'file' | 'url' | 'text' | 'builtin'
+  source: 'zip' | 'folder' | 'file' | 'builtin'
   createdAt: number
   updatedAt: number
 }

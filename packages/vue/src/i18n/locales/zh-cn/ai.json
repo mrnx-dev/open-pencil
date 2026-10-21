@@ -298,8 +298,6 @@
   "skillsDescription": "以文件夹组织的 SKILL.md 包，聊天通过 / 加载。内置技能随应用更新；你导入的技能会保留。",
   "importSkillFile": "添加文件…",
   "importSkillFolder": "添加文件夹…",
-  "importSkillUrl": "导入",
-  "importSkillUrlPlaceholder": "技能链接（.zip 或 .md）…",
   "importSkillFailed": "导入技能失败。",
   "importSkillEmpty": "该来源中没有技能。",
   "deleteSkill": "删除技能",

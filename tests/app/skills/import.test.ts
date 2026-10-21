@@ -3,7 +3,7 @@ import { afterEach, expect, test } from 'bun:test'
 
 import { zipSync } from 'fflate'
 
-import { importFromFiles, importFromText, skillsFromMarkdownTree } from '@/app/skills/import'
+import { importFromFiles, skillsFromMarkdownTree } from '@/app/skills/import'
 import { parseSkillMarkdown } from '@/app/skills/parse'
 import { clearSkills, getSkill, listSkills, writeSkill } from '@/app/skills/store'
 
@@ -65,18 +65,6 @@ test('importFromFiles splits zip and markdown picks the same way', async () => {
   expect(designer?.refs).toEqual({ 'render-and-replace.md': '# Render and replace' })
   expect(designer?.description).toBe('Design with the OpenPencil canvas.')
   expect((await listSkills()).map((skill) => skill.id).sort()).toEqual(['designer', 'flat'])
-})
-
-test('a pasted skill takes its frontmatter name and records the source', async () => {
-  await importFromText('ignored', DESIGNER_SKILL)
-  const skills = await listSkills()
-  expect(skills).toHaveLength(1)
-  expect(skills[0]).toMatchObject({
-    id: 'designer',
-    name: 'designer',
-    source: 'text',
-    content: DESIGNER_SKILL
-  })
 })
 
 const PEN_SKILL = `---

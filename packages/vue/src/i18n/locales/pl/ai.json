@@ -298,8 +298,6 @@
   "skillsDescription": "Pakiety SKILL.md w folderach, które czat ładuje przez /. Wbudowane skills odświeżają się z aplikacją; Twoje importy pozostają.",
   "importSkillFile": "Dodaj plik…",
   "importSkillFolder": "Dodaj folder…",
-  "importSkillUrl": "Importuj",
-  "importSkillUrlPlaceholder": "URL skilla (.zip lub .md)…",
   "importSkillFailed": "Nie udało się zaimportować skilla.",
   "importSkillEmpty": "W tym źródle nie ma żadnych skills.",
   "deleteSkill": "Usuń skill",

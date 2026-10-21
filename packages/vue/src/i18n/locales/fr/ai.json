@@ -298,8 +298,6 @@
   "skillsDescription": "Paquets SKILL.md en dossiers que le discussion charge via /. Les skills inclus suivent l’app ; vos importations sont conservées.",
   "importSkillFile": "Ajouter un fichier…",
   "importSkillFolder": "Ajouter un dossier…",
-  "importSkillUrl": "Importer",
-  "importSkillUrlPlaceholder": "URL du skill (.zip ou .md)…",
   "importSkillFailed": "Échec de l’import du skill.",
   "importSkillEmpty": "Aucun skill trouvé dans cette source.",
   "deleteSkill": "Supprimer le skill",
