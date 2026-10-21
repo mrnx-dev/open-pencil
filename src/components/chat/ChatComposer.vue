@@ -22,6 +22,8 @@ const emit = defineEmits<{
 }>()
 const { ai } = useI18n()
 const editable = ref<HTMLDivElement>()
+// The button reads this instead of the DOM: typing in a contenteditable changes no reactive state.
+const hasText = ref(false)
 const isStreaming = computed(() => disabled || status === 'streaming' || status === 'submitted')
 
 // --- Skills slash autocomplete with inline chips ---
@@ -43,6 +45,11 @@ function getPlainText(): string {
     }
   })
   return out.replace(/\u00A0/g, ' ')
+}
+
+/** DOM edits do not re-render this component, so every text mutation reports its result. */
+function syncHasText(): void {
+  hasText.value = getPlainText().trim() !== ''
 }
 
 function getCaretOffset(): number {
@@ -142,6 +149,7 @@ function insertChip(s: SkillSuggestion) {
   if (!insertSkillChipAtCaret(`/skill:${s.id}`)) return
   showSuggestions.value = false
   lastQuery = null
+  syncHasText()
   el.focus()
 }
 
@@ -176,7 +184,10 @@ function applySuggestionKey(event: KeyboardEvent): boolean {
 function handleKeydown(event: KeyboardEvent) {
   if (applySuggestionKey(event)) return
   // backspace on chip: delete whole chip when caret just after it
-  if (deleteChipAtCaret(event)) return
+  if (deleteChipAtCaret(event)) {
+    syncHasText()
+    return
+  }
   if (event.code === 'Enter' && !event.shiftKey && !event.isComposing) {
     event.preventDefault()
     const target = (event.currentTarget as HTMLElement).closest('form')
@@ -186,6 +197,7 @@ function handleKeydown(event: KeyboardEvent) {
 
 function handleInput() {
   updateSuggestions()
+  syncHasText()
 }
 
 /** Leaving the composer closes the menu; suggestion rows prevent blur with mousedown.prevent. */
@@ -214,12 +226,14 @@ function handleSubmit(event: Event) {
   lastQuery = null
   emit('submit', text)
   if (editable.value) editable.value.innerHTML = ''
+  hasText.value = false
 }
 
 function restoreDraft(text: string): boolean {
   const el = editable.value
   if (!el || el.textContent?.trim()) return false
   el.textContent = text
+  syncHasText()
   return true
 }
 defineExpose({ restoreDraft })
@@ -297,12 +311,12 @@ defineExpose({ restoreDraft })
             </IconButton>
             <IconButton
               v-else
-              label="Send"
+              :label="ai.sendMessage"
               size="sm"
               type="submit"
               data-test-id="chat-send-button"
               class="bg-accent text-on-accent hover:bg-accent/90 hover:text-on-accent"
-              :disabled="!editable?.textContent?.trim()"
+              :disabled="!hasText"
             >
               <icon-lucide-send class="size-3.5" />
             </IconButton>
