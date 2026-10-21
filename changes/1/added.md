@@ -1,4 +1,4 @@
-- The AI chat picks up bundled skills through /skill autocomplete: submitting a skill chip injects the skill's guidance, and the model reads its larger reference files on demand with read_skill_reference.
+- The AI chat picks up bundled skills through /skill autocomplete: submitting a skill chip injects the skill's guidance, and the model reads larger files on demand with read_skill_reference, including another skill's SKILL.md when a skill hands off to it.
 - The chat ships a bundled designer skill that teaches the render, replace, and verify workflow of OpenPencil's design tools.
 - Settings → AI gains a Skills section: import skills from a zip archive or a folder, show or hide each skill in /skill autocomplete, and delete imported ones.
 - The chat's designer skill gains optional reference guides for three composition recipes (landing pages, app screens, slides), the collections and variables workflow, and the visual verification loop.

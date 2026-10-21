@@ -12,7 +12,7 @@ import { getSkill } from '@/app/skills/store'
 export const readSkillReference = defineTool({
   name: 'read_skill_reference',
   description:
-    "Read one reference file bundled with a skill, such as a skill's authoring guide. Use this when a skill's content links a reference file you need, instead of guessing its contents.",
+    "Read one file bundled with a skill: its SKILL.md instructions, or a reference file its content links, such as an authoring guide. Use this instead of guessing a file's contents, for example to load another skill the current skill tells you to hand off to.",
   execution: { kind: 'async', mutation: 'none' },
   capabilities: ['settings:read'],
   exposure: { ai: true },
@@ -24,7 +24,7 @@ export const readSkillReference = defineTool({
     reference: v.pipe(
       v.string(),
       v.description(
-        'Reference file name exactly as the skill content links it, e.g. "design-authoring.md"'
+        'File name: "SKILL.md" reads the skill\'s own instructions; otherwise a reference file name exactly as the skill content links it, e.g. "design-authoring.md"'
       )
     )
   }),
@@ -32,6 +32,11 @@ export const readSkillReference = defineTool({
     const record = await getSkill(skill)
     if (!record) {
       return { error: `No skill named "${skill}" exists. Try the /skill autocomplete names.` }
+    }
+    // A skill referenced from another skill's content has nothing injected, so its SKILL.md is
+    // reachable only here; guessing reference names was the failure this prevents.
+    if (reference === 'SKILL.md') {
+      return { skill: record.id, reference, content: record.content }
     }
     const content = record.refs?.[reference]
     if (content === undefined) {

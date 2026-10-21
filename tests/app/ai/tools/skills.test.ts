@@ -26,6 +26,24 @@ test('read_skill_reference resolves a bundled skill reference by name', async ()
   })
 })
 
+test('the SKILL.md reference reads a skill the chat has not injected', async () => {
+  await writeSkill({
+    name: 'better-layout',
+    content: '# Better layout\nInstructions the model cannot see without this path.',
+    refs: { 'grouping-and-alignment.md': '# Grouping\n' },
+    source: 'folder'
+  })
+  const result = await readSkillReference.execute(null as never, {
+    skill: 'better-layout',
+    reference: 'SKILL.md'
+  })
+  expect(result).toEqual({
+    skill: 'better-layout',
+    reference: 'SKILL.md',
+    content: '# Better layout\nInstructions the model cannot see without this path.'
+  })
+})
+
 test('names are normalized like the /skill autocomplete ids', async () => {
   await writeSkill({ name: 'My Design Skill', content: 'x', source: 'zip' })
   const result = await readSkillReference.execute(null as never, {
