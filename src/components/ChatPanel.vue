@@ -17,6 +17,7 @@ import { didHitStepLimit } from '@/app/ai/tools'
 import { getActiveEditorStore } from '@/app/editor/active-store'
 import { openSettingsDialog } from '@/app/settings/dialog'
 import { toast } from '@/app/shell/ui'
+import { syncBundledSkills } from '@/app/skills/seed'
 import { activeTab } from '@/app/tabs'
 import ACPPermissionDialog from '@/components/chat/ACPPermissionDialog.vue'
 import ChatHistory from '@/components/chat/ChatHistory.vue'
@@ -28,6 +29,9 @@ import { useImageDrop } from '@/components/chat/input/useImageDrop'
 import ProviderSetup from '@/components/chat/ProviderSetup.vue'
 
 const { isConfigured, ensureChat, history, chatFailure, clearChatFailure } = useAIChat()
+// Seed bundled skills whenever the AI tab opens, not only when a provider is configured,
+// so Settings > AI > Skills and the composer autocomplete agree.
+syncBundledSkills()
 const { ai } = useI18n()
 const runLocation = useChatRunLocation()
 

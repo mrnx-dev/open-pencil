@@ -35,11 +35,13 @@ let lastQuery: string | null = null
 function getPlainText(): string {
   const el = editable.value
   if (!el) return ''
-  // collect text: chip spans have data-token, convert to token text
+  // collect text: chip spans have data-token, convert to token text, <br> marks a line break
   let out = ''
   el.childNodes.forEach((n) => {
     if (n.nodeType === 1 && (n as HTMLElement).dataset.token) {
       out += (n as HTMLElement).dataset.token + ' '
+    } else if (n.nodeName === 'BR') {
+      out += '\n'
     } else {
       out += n.textContent || ''
     }
@@ -277,9 +279,11 @@ defineExpose({ restoreDraft })
           <div
             ref="editable"
             contenteditable="true"
+            role="textbox"
+            :aria-label="ai.describeChange"
             data-test-id="chat-input"
             :data-placeholder="ai.describeChange + ' (' + ai.skillsHint + ')'"
-            class="block min-h-12 max-h-40 w-full overflow-y-auto bg-transparent px-3 py-2.5 text-xs leading-relaxed outline-none empty:before:text-muted empty:before:content-[attr(data-placeholder)] disabled:opacity-60 [&_span[data-token]]:align-baseline"
+            class="block min-h-12 max-h-40 w-full overflow-y-auto whitespace-pre-wrap bg-transparent px-3 py-2.5 text-xs leading-relaxed outline-none empty:before:text-muted empty:before:content-[attr(data-placeholder)] disabled:opacity-60 [&_span[data-token]]:align-baseline"
             @keydown="handleKeydown"
             @input="handleInput"
             @click="updateSuggestions"

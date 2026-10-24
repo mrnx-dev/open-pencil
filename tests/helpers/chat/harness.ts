@@ -7,6 +7,10 @@ export class ChatHarness {
     return this.page.getByRole('textbox', { name: 'Describe a change' })
   }
 
+  inputText() {
+    return this.input.innerText()
+  }
+
   get chatTab() {
     return this.page.getByRole('tab', { name: 'AI' })
   }
