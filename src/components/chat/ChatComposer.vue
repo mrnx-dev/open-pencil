@@ -5,7 +5,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { deleteChipAtCaret, insertSkillChipAtCaret } from '@/app/skills/chip'
+import { deleteChipAtCaret, insertSkillChipAtCaret, selectPlainRange } from '@/app/skills/chip'
 import { syncBundledSkills } from '@/app/skills/seed'
 import { detectSlashQuery, suggestSkills, type SkillSuggestion } from '@/app/skills/trigger'
 import IconButton from '@/components/ui/button/IconButton.vue'
