@@ -44,8 +44,14 @@ export function insertSkillChipAtCaret(token: string): boolean {
 export function selectPlainRange(el: HTMLElement, start: number, end: number): boolean {
   const range = document.createRange()
   let plain = 0
-  let started = start === 0
+  let started = false
   const reached = (offset: number): boolean => started && plain >= offset
+  // `start === 0` has no DOM anchor: without this, the range starts on the document node
+  // and insertNode later throws HierarchyRequestError ("Only one element on document allowed").
+  if (start === 0) {
+    range.setStart(el, 0)
+    started = true
+  }
   const walk = (parent: Node): boolean => {
     for (const node of Array.from(parent.childNodes)) {
       if (isSkillChip(node)) {
@@ -86,7 +92,7 @@ export function selectPlainRange(el: HTMLElement, start: number, end: number): b
     }
     return false
   }
-  if (!started || !walk(el)) return false
+  if (!walk(el) || !started) return false
   // `end` fell short of the DOM's text (offsets measured before a mutation): take up to the end.
   if (plain < end) range.setEnd(el, el.childNodes.length)
   const sel = window.getSelection()
