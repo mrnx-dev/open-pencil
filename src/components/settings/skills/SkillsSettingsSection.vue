@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 
-import { useI18n } from '@open-pencil/vue'
+import { useI18n } from '@open-pencil/vue/i18n'
 
 import { toast } from '@/app/shell/ui'
 import { importFromFiles } from '@/app/skills/import'
@@ -11,6 +11,7 @@ import AppButton from '@/components/ui/button/AppButton.vue'
 import IconButton from '@/components/ui/button/IconButton.vue'
 import { AppConfirmationDialog } from '@/components/ui/dialog'
 import AppActionRow from '@/components/ui/list/AppActionRow.vue'
+import { useHeldContent } from '@/components/ui/overlay/held'
 
 const { ai, common } = useI18n()
 
@@ -19,6 +20,8 @@ const importing = ref(false)
 const fileInput = ref<HTMLInputElement>()
 const folderInput = ref<HTMLInputElement>()
 const pendingDelete = ref<SkillRecord>()
+// Confirming clears the record; the dialog keeps showing the skill while it animates closed.
+const deleting = useHeldContent(pendingDelete)
 
 async function refresh(): Promise<void> {
   skills.value = await listSkills()
@@ -154,7 +157,7 @@ function dismissDelete(open?: boolean): void {
 
     <AppConfirmationDialog
       :open="pendingDelete !== undefined"
-      :heading="ai.deleteSkillConfirmation({ name: pendingDelete?.name ?? '' })"
+      :heading="ai.deleteSkillConfirmation({ name: deleting?.name ?? '' })"
       :description="ai.deleteSkillDescription"
       :cancel-label="common.cancel"
       :confirm-label="ai.deleteSkill"
