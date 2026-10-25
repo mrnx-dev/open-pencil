@@ -131,7 +131,8 @@ function applySuggestionKey(event: KeyboardEvent): boolean {
     return true
   }
   const selected = suggestions.value[selectedIdx.value]
-  if (event.code === 'Enter' && !event.shiftKey && selected) {
+  // Enter or Tab accepts the highlighted suggestion, like clicking a row.
+  if ((event.code === 'Enter' || event.code === 'Tab') && !event.shiftKey && selected) {
     event.preventDefault()
     insertChip(selected)
     return true

@@ -12,7 +12,8 @@ test('typing / suggests skills and the chip injects the SKILL.md content', async
   await chat.input.type('/')
   const listbox = chat.page.getByRole('listbox', { name: 'Skills 1' })
   await expect(listbox).toBeVisible()
-  await listbox.getByRole('option', { name: '/skill:designer' }).click()
+  // Tab accepts the highlighted suggestion, like Enter or clicking a row.
+  await chat.input.press('Tab')
   await expect(chat.input).toHaveText('/skill:designer ')
 
   await chat.input.type('Make a landing page')
