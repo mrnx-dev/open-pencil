@@ -46,7 +46,8 @@ const connectionSchema = v.object({
   providerID: v.custom<AIProviderID>(isProviderID),
   customBaseURL: v.fallback(v.string(), ''),
   customAPIType: v.fallback(v.picklist(['completions', 'responses']), 'completions'),
-  credentialProfileId: v.pipe(v.string(), v.minLength(1))
+  credentialProfileId: v.pipe(v.string(), v.minLength(1)),
+  cloudWorkspaceId: v.fallback(v.optional(v.string()), undefined)
 })
 
 const thinkingLevelSchema = v.picklist(THINKING_LEVELS)
@@ -306,7 +307,8 @@ function connectionMatchesDraft(
   return (
     connection.providerID === draft.providerID &&
     connection.customBaseURL === draft.customBaseURL.trim() &&
-    connection.customAPIType === draft.customAPIType
+    connection.customAPIType === draft.customAPIType &&
+    (connection.cloudWorkspaceId ?? '') === (draft.cloudWorkspaceId ?? '')
   )
 }
 
@@ -329,7 +331,8 @@ function connectionForDraft(draft: AIModelProfileDraft): AIModelConnection {
     providerID: draft.providerID,
     customBaseURL: draft.customBaseURL.trim(),
     customAPIType: draft.customAPIType,
-    credentialProfileId: id
+    credentialProfileId: id,
+    cloudWorkspaceId: draft.cloudWorkspaceId || undefined
   }
   aiModelSettings.value.connections.push(connection)
   return connection
@@ -348,6 +351,7 @@ function draftForProfile(
     customModelID: profile.customModelID,
     customBaseURL: connection.customBaseURL,
     customAPIType: connection.customAPIType,
+    cloudWorkspaceId: connection.cloudWorkspaceId,
     maxOutputTokens: profile.maxOutputTokens,
     thinkingLevel: profile.thinkingLevel,
     harnessPermissionMode: profile.harnessPermissionMode ?? 'allow-edits',
@@ -367,6 +371,7 @@ function newProfileDraft(connection: AIModelConnection | null): AIModelProfileDr
     customModelID: '',
     customBaseURL: connection?.customBaseURL ?? '',
     customAPIType: connection?.customAPIType ?? 'completions',
+    cloudWorkspaceId: connection?.cloudWorkspaceId,
     maxOutputTokens: DEFAULT_MAX_OUTPUT_TOKENS,
     thinkingLevel: 'default',
     harnessPermissionMode: 'allow-edits',

@@ -4,7 +4,7 @@ import { useEventListener, whenever } from '@vueuse/core'
 import { computed, onMounted, onUnmounted, provide, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useI18n } from '@open-pencil/vue'
+import { useI18n } from '@open-pencil/vue/i18n'
 
 import {
   aiSetupDialogOpen,
@@ -53,7 +53,7 @@ import FontStatusBanner from '@/components/font-status/FontStatusBanner.vue'
 import HomeWorkspace from '@/components/home/HomeWorkspace.vue'
 import RenameSelectionDialog from '@/components/selection/RenameSelectionDialog.vue'
 import TabBar from '@/components/TabBar.vue'
-import { IS_BROWSER } from '@/constants'
+import { IS_BROWSER, IS_CLOUD_SITE } from '@/constants'
 
 const route = useRoute()
 /**
@@ -77,8 +77,13 @@ watch(
 )
 const router = useRouter()
 const createdInitialTab = tabCount() === 0
+// Home opens first where it lists something: recent files, or the workspaces of the Cloud server
+// that serves the editor.
 const shouldCreateHome =
-  route.path === '/' && !appRuntimeConfig.test && !route.meta.demo && recentFilesAvailable()
+  route.path === '/' &&
+  !appRuntimeConfig.test &&
+  !route.meta.demo &&
+  (recentFilesAvailable() || IS_CLOUD_SITE)
 const { collaboration } = useI18n()
 const joinRoomFromInput = useJoinRoom()
 
@@ -176,7 +181,7 @@ function openDocumentPaths(): string[] {
  * Drops the link params through the router, not through `history` directly: the router
  * keeps its own copy of the current URL in `history.state` and re-applies it on the next
  * navigation, which would put `file` and `node` back into the entry. Route and hash are
- * preserved, so the link works on `/`, `/share/:id` and `/demo` alike.
+ * preserved, so the link works on `/`, `/rooms/:id` and `/demo` alike.
  */
 function stripWebLinkParams(): void {
   void router.replace({

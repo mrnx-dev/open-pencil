@@ -3,7 +3,7 @@ import type { ChatStatus } from 'ai'
 import { TooltipProvider } from 'reka-ui'
 import { computed, nextTick, ref, watch } from 'vue'
 
-import { useI18n } from '@open-pencil/vue'
+import { useI18n } from '@open-pencil/vue/i18n'
 
 import { deleteChipAtCaret, insertSkillChipAtCaret } from '@/app/skills/chip'
 import { syncBundledSkills } from '@/app/skills/seed'
