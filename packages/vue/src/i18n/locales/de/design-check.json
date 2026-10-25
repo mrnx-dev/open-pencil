@@ -48,6 +48,8 @@
   "ruleTouchTargetSizeHelp": "Schaltflächen, Links und andere Bedienelemente brauchen Platz zum Antippen: mindestens 24 × 24 für WCAG AA, 44 × 44 für AAA.",
   "ruleMinTextSize": "Kleiner Text",
   "ruleMinTextSizeHelp": "Text unter 12 px ist auf den meisten Bildschirmen schwer lesbar.",
+  "ruleAutoLineHeight": "Strenger Zeilenabstand",
+  "ruleAutoLineHeightHelp": "Umbruchender Text braucht einen Zeilenabstand von mindestens 1,1× der Schriftgröße; „auto“ folgt der Schrift.",
   "ruleConsistentSpacing": "Abstand außerhalb der Skala",
   "ruleConsistentSpacingHelp": "Abstände und Innenabstände im Auto-Layout sollten aus der Abstandsskala stammen oder Vielfache von 4 sein.",
   "detailSpacingGap": "Abstand {value}",

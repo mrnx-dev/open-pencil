@@ -48,6 +48,8 @@
   "ruleTouchTargetSizeHelp": "Przyciski, linki i inne kontrolki potrzebują miejsca na dotknięcie: co najmniej 24 × 24 dla WCAG AA i 44 × 44 dla AAA.",
   "ruleMinTextSize": "Mały tekst",
   "ruleMinTextSizeHelp": "Tekst mniejszy niż 12 px jest trudny do odczytania na większości ekranów.",
+  "ruleAutoLineHeight": "Zbyt ciasna interlinia",
+  "ruleAutoLineHeightHelp": "Tekst łamiący się na kilka linii wymaga interlinii co najmniej 1,1× rozmiaru czcionki; „auto” stosuje wartość z czcionki.",
   "ruleConsistentSpacing": "Odstęp spoza skali",
   "ruleConsistentSpacingHelp": "Odstępy i dopełnienia auto-layoutu powinny pochodzić ze skali odstępów lub być wielokrotnością 4.",
   "detailSpacingGap": "Odstęp {value}",

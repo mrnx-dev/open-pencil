@@ -54,6 +54,9 @@ export const designCheckMessageDefaults = {
     'Buttons, links and other controls need room to tap: at least 24 × 24 for WCAG AA, 44 × 44 for AAA.',
   ruleMinTextSize: 'Small text',
   ruleMinTextSizeHelp: 'Text smaller than 12 px is hard to read on most screens.',
+  ruleAutoLineHeight: 'Tight line height',
+  ruleAutoLineHeightHelp:
+    'Text that wraps needs a line height of at least 1.1× its font size; auto follows the font.',
   ruleConsistentSpacing: 'Off-scale spacing',
   ruleConsistentSpacingHelp:
     'Auto layout gaps and padding should come from the spacing scale or a multiple of 4.',

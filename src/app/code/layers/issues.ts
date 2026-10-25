@@ -31,6 +31,8 @@ function designJSXProps(issue: DesignIssue): readonly string[] {
       return ['color']
     case 'min-text-size':
       return ['size']
+    case 'auto-line-height':
+      return ['lineHeight']
     case 'touch-target-size':
       return ['w', 'h']
     case 'consistent-radius':

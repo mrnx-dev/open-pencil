@@ -136,6 +136,7 @@ export class Linter {
       componentId: raw.componentId || undefined,
       text: raw.text,
       fontSize: raw.fontSize,
+      lineHeight: raw.lineHeight,
       textStyles: raw.type === 'TEXT' ? effectiveTextStyles(raw) : undefined,
       styleRunCount: raw.styleRuns.length,
       boundVariables: raw.boundVariables,

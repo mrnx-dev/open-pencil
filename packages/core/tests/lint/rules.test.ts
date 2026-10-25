@@ -206,6 +206,73 @@ describe('touch-target-size', () => {
   })
 })
 
+describe('auto-line-height', () => {
+  test('passes auto line heights and ratios inside the band', () => {
+    const graph = new SceneGraph()
+    const pageId = graph.getPages()[0].id
+    const auto = graph.createNode('TEXT', pageId, {
+      name: 'Body',
+      text: 'Wraps onto several lines',
+      fontSize: 16,
+      lineHeight: null
+    })
+    const roomy = graph.createNode('TEXT', pageId, {
+      name: 'Roomy',
+      text: 'Also wraps',
+      fontSize: 16,
+      lineHeight: { value: 150, unit: 'PERCENT' }
+    })
+    const heading = graph.createNode('TEXT', pageId, {
+      name: 'Heading',
+      text: 'One line',
+      fontSize: 40,
+      lineHeight: { value: 48, unit: 'PIXELS' }
+    })
+
+    expect(lint(graph, 'auto-line-height')).toEqual([])
+    expect(auto.lineHeight).toBeNull()
+    expect(roomy.lineHeight).toEqual({ value: 150, unit: 'PERCENT' })
+    expect(heading.lineHeight).toEqual({ value: 48, unit: 'PIXELS' })
+  })
+
+  test('reports a fixed line height tighter than the band at the font size', () => {
+    const graph = new SceneGraph()
+    const pageId = graph.getPages()[0].id
+    const tight = graph.createNode('TEXT', pageId, {
+      name: 'Tight',
+      text: 'Body copy that wraps',
+      fontSize: 16,
+      lineHeight: { value: 100, unit: 'PERCENT' }
+    })
+    // The JSX shorthand `lineHeight={1.08}` writes 1.08 pixels, not a ratio.
+    const pixels = graph.createNode('TEXT', pageId, {
+      name: 'Pixels',
+      text: 'A headline',
+      fontSize: 72,
+      lineHeight: { value: 1.08, unit: 'PIXELS' }
+    })
+
+    const messages = lint(graph, 'auto-line-height')
+
+    expect(messages.map((message) => message.nodeId)).toEqual([tight.id, pixels.id])
+    expect(messages[0]?.data).toEqual({ fontSize: 16, lineHeight: 16 })
+    expect(messages[1]?.data).toEqual({ fontSize: 72, lineHeight: 1.08 })
+  })
+
+  test('takes a configured minimum ratio', () => {
+    const graph = new SceneGraph()
+    const pageId = graph.getPages()[0].id
+    graph.createNode('TEXT', pageId, {
+      name: 'Body',
+      text: 'Wraps',
+      fontSize: 16,
+      lineHeight: { value: 115, unit: 'PERCENT' }
+    })
+
+    expect(lint(graph, 'auto-line-height')).toEqual([])
+  })
+})
+
 describe('instances', () => {
   test('are checked themselves but not through their sublayers', () => {
     const graph = new SceneGraph()

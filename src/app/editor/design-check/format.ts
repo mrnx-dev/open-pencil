@@ -21,6 +21,7 @@ const RULE_COPY: Partial<Record<string, RuleCopy>> = {
   'color-contrast': { title: 'ruleColorContrast', help: 'ruleColorContrastHelp' },
   'touch-target-size': { title: 'ruleTouchTargetSize', help: 'ruleTouchTargetSizeHelp' },
   'min-text-size': { title: 'ruleMinTextSize', help: 'ruleMinTextSizeHelp' },
+  'auto-line-height': { title: 'ruleAutoLineHeight', help: 'ruleAutoLineHeightHelp' },
   'consistent-spacing': { title: 'ruleConsistentSpacing', help: 'ruleConsistentSpacingHelp' },
   'consistent-radius': { title: 'ruleConsistentRadius', help: 'ruleConsistentRadiusHelp' },
   'no-hardcoded-colors': { title: 'ruleNoHardcodedColors', help: 'ruleNoHardcodedColorsHelp' },
@@ -102,6 +103,8 @@ export function issueDetail(issue: DesignIssue, messages: Messages): string | nu
     }
     case 'min-text-size':
       return px(numberAt(issue, 'fontSize')) || null
+    case 'auto-line-height':
+      return px(numberAt(issue, 'lineHeight')) || null
     case 'consistent-radius':
       return px(numberAt(issue, 'radius')) || null
     case 'consistent-spacing': {
