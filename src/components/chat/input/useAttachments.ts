@@ -3,6 +3,7 @@ import { uniq } from 'es-toolkit'
 import { computed, onBeforeUnmount, ref, type Ref } from 'vue'
 
 import type { Editor } from '@open-pencil/core'
+import { useI18n } from '@open-pencil/vue/i18n'
 
 import {
   createImagePreviewURL,
@@ -27,6 +28,7 @@ interface AttachmentDraftOptions {
 }
 
 export function useAttachmentDrafts(options: AttachmentDraftOptions) {
+  const { ai } = useI18n()
   /** Advances when a message is sent or the draft is cleared, so late images skip it. */
   let draftGeneration = 0
   const images = ref<ImageAttachmentDraft[]>([])
@@ -61,9 +63,9 @@ export function useAttachmentDrafts(options: AttachmentDraftOptions) {
    */
   async function addFiles(files: File[]): Promise<void> {
     const draft = draftGeneration
-    const limitMessage = `You can attach up to ${MAX_IMAGE_ATTACHMENTS} images.`
+    const limitMessage = () => ai.value.dropImagesLimit({ count: MAX_IMAGE_ATTACHMENTS })
     if (images.value.length >= MAX_IMAGE_ATTACHMENTS) {
-      options.reportError(limitMessage)
+      options.reportError(limitMessage())
       resetImageDialog()
       return
     }
@@ -74,7 +76,7 @@ export function useAttachmentDrafts(options: AttachmentDraftOptions) {
         if (draft !== draftGeneration) return
         // Checked after the await, since another drop may have filled the slots meanwhile.
         if (images.value.length >= MAX_IMAGE_ATTACHMENTS) {
-          options.reportError(limitMessage)
+          options.reportError(limitMessage())
           break
         }
         const validationError = validateImageAttachmentFile(image)

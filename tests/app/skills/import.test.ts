@@ -121,7 +121,12 @@ test('a tree mixing a root SKILL.md, nested skills, and loose files splits clean
 })
 
 test('an import colliding with a builtin skill keeps the builtin and derives a unique id', async () => {
-  await writeSkill({ ...parseSkillMarkdown(DESIGNER_SKILL), name: 'designer', source: 'builtin', refs: { 'guide.md': '# G' } })
+  await writeSkill({
+    ...parseSkillMarkdown(DESIGNER_SKILL),
+    name: 'designer',
+    source: 'builtin',
+    refs: { 'guide.md': '# G' }
+  })
   await importFromFiles([new File([DESIGNER_SKILL], 'designer.md')])
   const skills = await listSkills()
   const ids = skills.map((skill) => skill.id).sort()

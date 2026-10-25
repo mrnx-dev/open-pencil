@@ -31,6 +31,7 @@ const suggestions = ref<SkillSuggestion[]>([])
 const showSuggestions = ref(false)
 const selectedIdx = ref(0)
 let lastQuery: string | null = null
+let suggestGeneration = 0
 
 function getPlainText(): string {
   const el = editable.value
@@ -80,7 +81,10 @@ async function updateSuggestions() {
   if (query !== null) {
     const shouldReset = query !== lastQuery
     lastQuery = query
+    // A slower search for an earlier keystroke must not overwrite the current suggestions.
+    const generation = ++suggestGeneration
     const list = await suggestSkills(query)
+    if (generation !== suggestGeneration) return
     const prevLen = suggestions.value.length
     suggestions.value = list
     showSuggestions.value = list.length > 0
@@ -97,57 +101,14 @@ function insertChip(s: SkillSuggestion) {
   if (!el) return
   const sel = window.getSelection()
   if (!sel || sel.rangeCount === 0) return
-  // find slash start in plain text before caret, then delete slash query from DOM
   const text = getPlainText()
   const pos = getCaretOffset()
   const before = text.slice(0, pos)
   const slashStart = before.lastIndexOf('/')
   if (slashStart === -1) return
-  // remove slash query text nodes between slashStart and pos
-  // simpler: delete slash query chars from editable by walking back
-  const tokenLen = pos - slashStart
-  // delete chars
-  let toDelete = tokenLen
-  // delete backwards from caret
-  while (toDelete > 0 && sel.rangeCount) {
-    const r = sel.getRangeAt(0)
-    // if caret inside text node, delete char
-    if (r.endContainer.nodeType === 3) {
-      const txt = r.endContainer as Text
-      const offset = r.endOffset
-      if (offset > 0) {
-        txt.deleteData(offset - 1, 1)
-        r.setStart(txt, offset - 1)
-        r.collapse(true)
-        toDelete--
-      } else {
-        // move to previous node
-        const prev = txt.previousSibling
-        if (!prev) break
-        if (prev.nodeType === 1 && (prev as HTMLElement).dataset.token) {
-          // if previous is chip and we are at boundary, just move
-          const pr = document.createRange()
-          pr.selectNode(prev)
-          pr.collapse(false)
-          sel.removeAllRanges()
-          sel.addRange(pr)
-          if (toDelete === tokenLen) {
-            // chip is not part of slash query, stop
-            break
-          }
-        } else if (prev.nodeType === 3) {
-          const pr = document.createRange()
-          pr.selectNodeContents(prev as Text)
-          pr.collapse(false)
-          sel.removeAllRanges()
-          sel.addRange(pr)
-        }
-      }
-    } else {
-      break
-    }
-  }
-  // create the chip and a trailing caret space at the caret
+  // Select the slash query (slash through caret) in the DOM and delete it in one go.
+  if (!selectPlainRange(el, slashStart, pos)) return
+  sel.getRangeAt(0).deleteContents()
   if (!insertSkillChipAtCaret(`/skill:${s.id}`)) return
   showSuggestions.value = false
   lastQuery = null

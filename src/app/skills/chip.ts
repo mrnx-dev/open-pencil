@@ -37,6 +37,66 @@ export function insertSkillChipAtCaret(token: string): boolean {
 }
 
 /**
+ * Selects the plain-text character span [start, end) within the editable DOM, using the same
+ * accounting as the composer's plain-text extraction: a chip counts as its token plus a space.
+ * False when the span cannot be mapped (DOM changed since the offsets were measured).
+ */
+export function selectPlainRange(el: HTMLElement, start: number, end: number): boolean {
+  const range = document.createRange()
+  let plain = 0
+  let started = start === 0
+  const reached = (offset: number): boolean => started && plain >= offset
+  const walk = (parent: Node): boolean => {
+    for (const node of Array.from(parent.childNodes)) {
+      if (isSkillChip(node)) {
+        const len = (node.dataset.token ?? '').length + 1 // token plus its trailing space
+        if (!started && plain + len >= start) {
+          // A chip cannot be split: the start snaps to the whole chip.
+          range.setStart(node, 0)
+          started = true
+        }
+        plain += len
+        if (reached(end)) {
+          range.setEnd(node, node.childNodes.length)
+          return true
+        }
+        continue
+      }
+      if (node.nodeType === Node.TEXT_NODE) {
+        const txt = node as Text
+        const len = txt.data.length
+        if (!started && plain + len >= start) {
+          range.setStart(txt, start - plain)
+          started = true
+        }
+        plain += len
+        if (reached(end)) {
+          range.setEnd(txt, end - (plain - len))
+          return true
+        }
+      } else if (node.nodeName === 'BR') {
+        plain += 1
+        if (reached(end)) {
+          range.setEnd(node, 0)
+          return true
+        }
+      } else if (walk(node)) {
+        return true
+      }
+    }
+    return false
+  }
+  if (!started || !walk(el)) return false
+  // `end` fell short of the DOM's text (offsets measured before a mutation): take up to the end.
+  if (plain < end) range.setEnd(el, el.childNodes.length)
+  const sel = window.getSelection()
+  if (!sel) return false
+  sel.removeAllRanges()
+  sel.addRange(range)
+  return true
+}
+
+/**
  * Backspace handling for chips: with the caret just before a chip node, delete the whole chip
  * instead of splitting it. True when the key was handled.
  */
