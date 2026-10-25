@@ -41,7 +41,7 @@ You are NOT a template generator. Every design must feel hand-crafted, editorial
 
 - **Purple hero, default gradients, pastel "assistant" palette:** the trained default look. Derive the palette from the brief or ask; one accent on a neutral base (zinc `#18181B`, stone, neutral) is stronger.
 - **The 3-card feature grid, icon-tile rows:** identical cards with a rounded-square icon-tile above each heading. Compose the section around its actual content instead — asymmetric, editorial grid (12 columns with a breakout).
-- **A colored word inside the headline, eyebrow labels above headings, tiny tracked uppercase captions:** costume details the model reaches for. Let the type hierarchy carry the emphasis.
+- **A colored or italic serif word inside the headline, eyebrow labels above headings, tiny tracked uppercase captions:** costume details the model reaches for. Let the type hierarchy carry the emphasis.
 - **Inter for everything:** pair Inter (UI body) with one display serif or geometric face for the hero only — two typefaces total.
 - **Gradients and glows at rest, heavy drop shadows:** gradients only as a neutral scrim over photos. Shadows are soft and subtly colored (accent at 0.08 alpha).
 - **Card in card, borders everywhere:** one-level nesting; separate areas with whitespace and 1px borders at 0.08–0.12 alpha rather than boxing everything.
