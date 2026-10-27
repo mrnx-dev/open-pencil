@@ -5,6 +5,12 @@ templates: keep the taste rules in SKILL.md (typography, spacing scale, color, i
 every decision. Build one section per `render` call, or replace a whole section with `replace_id`
 once its structure must change, the mechanics are in [render-and-replace.md](./render-and-replace.md).
 
+**Line heights in the examples:** the headings below are single-line labels sized so they never
+wrap, which is why they carry a fixed `lineHeight:{1.1}`–`{1.2}`. Any text that can wrap — a wide
+headline, body copy, list rows, quotes — must use `lineHeight="auto"` instead (see the Floor rules
+in SKILL.md and the `auto-line-height` lint rule). Do not copy a fixed line height onto wrapping
+text just because an example here has one.
+
 ## Landing page
 
 A landing page sells one action. Treat the hero as the entire pitch compressed: what this is, why it

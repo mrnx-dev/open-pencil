@@ -11,15 +11,15 @@ designs through tools: `render` writes a design JSX tree, `replace_id` swaps an 
 
 ## Quick reference
 
-| Topic              | When to use                                                                                                                       | Reference                                        |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
-| Design authoring   | The renderer's design JSX schema: layout, paint, text, variables, components, and controls. Required to read before any `render`. | [design-authoring.md](./design-authoring.md)     |
-| Render and replace | The `render` → `replace_id` → diff workflow for building and editing designs safely. Required to read.                            | [render-and-replace.md](./render-and-replace.md) |
-| Compositions       | Ready-made section recipes for landing pages, app screens, dashboards, and slides, with JSX examples. Optional.                   | [compositions.md](./compositions.md)             |
-| Tells              | The machine-made patterns to avoid, with their substitutes. Read once before composing any new screen. Optional.                  | [tells.md](./tells.md)                           |
-| Checklist          | The pre-delivery verification pass over the finished design. Run before reporting a design done. Optional.                        | [checklist.md](./checklist.md)                   |
-| Variables          | When to bind variables instead of hardcoding values, and the collection, mode, and binding workflow. Optional.                    | [variables.md](./variables.md)                   |
-| Verify             | The render → export → inspect loop, structural diagnostics, and design audit tools. Optional.                                     | [verify.md](./verify.md)                         |
+| Topic              | When to use                                                                                                                                                              | Reference                                        |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------ |
+| Design authoring   | The renderer's design JSX schema: layout, paint, text, variables, components, and controls. Required to read before any `render`.                                        | [design-authoring.md](./design-authoring.md)     |
+| Render and replace | The `render` → `replace_id` → diff workflow for building and editing designs safely. Required to read.                                                                   | [render-and-replace.md](./render-and-replace.md) |
+| Compositions       | Ready-made section recipes for landing pages, app screens, dashboards, and slides, with JSX examples. Optional. Read the line-height note before copying a text example. | [compositions.md](./compositions.md)             |
+| Tells              | The machine-made patterns to avoid, with their substitutes. Read once before composing any new screen. Optional.                                                         | [tells.md](./tells.md)                           |
+| Checklist          | The pre-delivery verification pass over the finished design. Required to read before any `render`; run it before reporting a design done.                                | [checklist.md](./checklist.md)                   |
+| Variables          | When to bind variables instead of hardcoding values, and the collection, mode, and binding workflow. Optional.                                                           | [variables.md](./variables.md)                   |
+| Verify             | The render → export → inspect loop, structural diagnostics, and design audit tools. Optional.                                                                            | [verify.md](./verify.md)                         |
 
 ## Design taste
 
@@ -71,4 +71,5 @@ Follow the user's visual direction and any existing design system; the tiers abo
 - Prefer auto-layout to arithmetic for sizing; use `eval` only when a calculation is genuinely needed, and
   `calc` always instead of mental math.
 - Verify visually before reporting: export the affected nodes, inspect the image, and run the [checklist.md](./checklist.md) pass. Structural diagnostics alone are not visual acceptance.
+- Read [checklist.md](./checklist.md) before your first `render` in a session, not just at the end: its items are cheaper to satisfy while building than to fix after.
 - Respect the remaining tool budget: finish and report rather than racing a warning.
