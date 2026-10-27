@@ -10,10 +10,10 @@ import type { LintNode } from '#core/lint/types'
  */
 const DEFAULT_MIN_RATIO = 1.1
 
-/** The fixed line-height ratio a text layer enforces, or null when it follows the font. */
-function fixedRatio(node: LintNode): number | null {
+/** The fixed line height in pixels, or null when it follows the font. */
+function fixedLineHeight(node: LintNode): number | null {
   if (!node.lineHeight) return null
-  return textLengthPixels(node.lineHeight, node.fontSize) / node.fontSize
+  return textLengthPixels(node.lineHeight, node.fontSize)
 }
 
 export default defineRule({
@@ -26,9 +26,8 @@ export default defineRule({
   check(node, context) {
     const config = context.getConfig() as { minRatio?: number } | undefined
     const minRatio = config?.minRatio ?? DEFAULT_MIN_RATIO
-    const ratio = fixedRatio(node)
-    if (ratio === null || ratio >= minRatio) return
-    const lineHeight = textLengthPixels(node.lineHeight!, node.fontSize)
+    const lineHeight = fixedLineHeight(node)
+    if (lineHeight === null || lineHeight / node.fontSize >= minRatio) return
     context.report({
       node,
       message: `Line height ${lineHeight}px is below ${minRatio}× the ${node.fontSize}px font`,
