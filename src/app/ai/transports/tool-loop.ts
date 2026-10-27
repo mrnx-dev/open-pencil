@@ -4,7 +4,7 @@ import type { ChatTransport, LanguageModel, ToolExecutionOptions, UIMessage } fr
 
 import type { AIProviderID, ReasoningEffort } from '@open-pencil/core/constants'
 
-import { resumableTransport } from '@/app/ai/chat/history/continuation'
+import { resumableTransport, stepMessages } from '@/app/ai/chat/history/continuation'
 import { maxAgentSteps } from '@/app/ai/chat/preferences'
 import SYSTEM_PROMPT from '@/app/ai/chat/system-prompt'
 import type { RunRecorder, RunRecording } from '@/app/ai/chat/trace/recorder'
@@ -119,6 +119,7 @@ export function createToolLoopTransport({
         stopWhen: stepCountIs(currentRun(store).maxSteps),
         tools: offered,
         maxOutputTokens,
+        prepareStep: ({ messages }) => ({ messages: stepMessages(messages) }),
         ...callSettings(providerID, cacheProviderOptions, thinkingLevel(), minReasoningEffort)
       }
     },

@@ -1,8 +1,13 @@
 import { expect, test } from 'bun:test'
 
 import type { UIMessage } from 'ai'
+import type { ModelMessage, ToolResultPart } from 'ai'
 
-import { requestMessages, resumableTransport } from '@/app/ai/chat/history/continuation'
+import {
+  requestMessages,
+  resumableTransport,
+  stepMessages
+} from '@/app/ai/chat/history/continuation'
 
 test('continuation omits unfinished tool calls without altering the saved transcript', async () => {
   const messages: UIMessage[] = [
@@ -120,4 +125,65 @@ test('errors and non-image outputs are never elided', () => {
   // Only three image results exist, so all but none are dropped; the next export would elide EEE.
   expect(oldest?.parts[0]).toMatchObject({ output: { base64: 'EEE' } })
   expect(old?.parts[0]).toMatchObject({ output: { base64: 'FFF' } })
+})
+
+function toolMessage(id: string, payloads: Array<{ id: string; payload: unknown }>): ModelMessage {
+  return {
+    role: 'tool',
+    content: payloads.map(({ id: callId, payload }) => ({
+      type: 'tool-result' as const,
+      toolCallId: `${id}-${callId}`,
+      toolName: 'export_image',
+      output:
+        payload && typeof payload === 'object' && 'image' in (payload as Record<string, unknown>)
+          ? {
+              type: 'content' as const,
+              value: [
+                { type: 'text' as const, text: '{"width":100,"height":100}' },
+                {
+                  type: 'file' as const,
+                  mediaType: 'image/png',
+                  data: { type: 'data' as const, data: (payload as { image: string }).image }
+                }
+              ]
+            }
+          : { type: 'json' as const, value: payload }
+    }))
+  }
+}
+
+test("stepMessages elides the reply's own older exports, keeping the newest two", () => {
+  const messages = [
+    toolMessage('turn', [
+      { id: 'e1', payload: { image: 'AAA' } },
+      { id: 'e2', payload: { image: 'BBB' } },
+      { id: 'e3', payload: { image: 'CCC' } }
+    ])
+  ]
+  const [turn] = stepMessages(messages)
+
+  const [first, second, third] = (turn?.content ?? []) as ToolResultPart[]
+  expect(first).toMatchObject({ toolCallId: 'turn-e1', output: { type: 'content' } })
+  expect(JSON.stringify(first?.output)).toContain('imageElided')
+  expect(JSON.stringify(first?.output)).not.toContain('AAA')
+  expect(second).toMatchObject({ toolCallId: 'turn-e2' })
+  expect(JSON.stringify(second?.output)).toContain('BBB')
+  expect(third).toMatchObject({ toolCallId: 'turn-e3' })
+  expect(JSON.stringify(third?.output)).toContain('CCC')
+})
+
+test('stepMessages leaves non-image tool results untouched', () => {
+  const messages = [
+    toolMessage('turn', [
+      { id: 'err', payload: { error: 'No visible nodes to export' } },
+      { id: 'ok', payload: { image: 'DDD' } }
+    ])
+  ]
+  const [turn] = stepMessages(messages)
+
+  const [errorPart, imagePart] = (turn?.content ?? []) as ToolResultPart[]
+  expect(errorPart).toMatchObject({
+    output: { type: 'json', value: { error: 'No visible nodes to export' } }
+  })
+  expect(JSON.stringify(imagePart?.output)).toContain('DDD')
 })

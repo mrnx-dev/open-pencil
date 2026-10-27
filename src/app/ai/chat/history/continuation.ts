@@ -2,6 +2,8 @@ import {
   getToolName,
   isToolUIPart,
   type ChatTransport,
+  type ModelMessage,
+  type ToolResultPart,
   type UIDataTypes,
   type UIMessage,
   type UIMessagePart,
@@ -15,6 +17,12 @@ const KEPT_IMAGE_RESULTS = 2
 const elidedImageResult = {
   imageElided: true,
   note: 'This older export_image result was removed to fit the context window; call export_image again to see it.'
+}
+
+/** The ModelMessage-level twin of `elidedImageResult` for `stepMessages`. */
+const elidedImageOutput: ToolResultPart['output'] = {
+  type: 'content',
+  value: [{ type: 'text', text: JSON.stringify(elidedImageResult) }]
 }
 
 type Part = UIMessagePart<UIDataTypes, UITools>
@@ -45,6 +53,7 @@ export function requestMessages(messages: UIMessage[]): UIMessage[] {
       parts: message.parts.flatMap((part): Part[] => {
         if (!('toolCallId' in part)) return [part]
         if (
+          part.type !== 'tool-approval-response' &&
           part.state !== 'output-available' &&
           part.state !== 'output-error' &&
           part.state !== 'output-denied'
@@ -68,4 +77,36 @@ export function resumableTransport(transport: ChatTransport<UIMessage>): ChatTra
     sendMessages: (options) =>
       transport.sendMessages({ ...options, messages: requestMessages(options.messages) })
   }
+}
+
+const isImageOutputPart = (
+  part: unknown
+): part is Extract<ToolResultPart['output'], { type: 'content' }> =>
+  isRecord(part) && part.type === 'content' && Array.isArray(part.value)
+
+/**
+ * A tool-turn's results with older `export_image` images replaced by a note. Runs on the
+ * ModelMessage list each loop step via `prepareStep`: the transport-level `requestMessages`
+ * sees only the conversation before the reply, so during a run the reply's own first export
+ * would otherwise sit unelided in every later step's request and grow it past the window.
+ */
+export function stepMessages(messages: ModelMessage[]): ModelMessage[] {
+  let kept = 0
+  return [...messages]
+    .reverse()
+    .map((message) => {
+      if (message.role !== 'tool') return message
+      const content = [...message.content]
+        .reverse()
+        .flatMap((part): ToolResultPart[] => {
+          if (part.type !== 'tool-result') return []
+          if (part.toolName !== 'export_image' || !isImageOutputPart(part.output)) return [part]
+          if (kept >= KEPT_IMAGE_RESULTS) return [{ ...part, output: elidedImageOutput }]
+          kept++
+          return [part]
+        })
+        .reverse()
+      return { ...message, content }
+    })
+    .reverse()
 }
