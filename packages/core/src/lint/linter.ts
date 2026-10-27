@@ -55,6 +55,11 @@ export class Linter {
     }
     if (options.config?.rules) baseConfig = { ...baseConfig, ...options.config.rules }
     const rulesToLoad = options.rules ?? Object.keys(baseConfig)
+    const unknown = rulesToLoad.filter((ruleId) => !allRules[ruleId])
+    if (unknown.length > 0)
+      throw new Error(
+        `Unknown lint rule(s): ${unknown.join(', ')}. The loaded build may be stale — rebuild packages first.`
+      )
     for (const ruleId of rulesToLoad) {
       const rule = allRules[ruleId]
       const config = baseConfig[ruleId]

@@ -32,7 +32,7 @@ You are NOT a template generator. Every design must feel hand-crafted, editorial
 ### Floor
 
 - **Readable text:** every text/background pair keeps a contrast of 4.5:1 (large display text 3:1). Dark gray text on tinted or colored surfaces is unreadable, not moody.
-- **`lineHeight="auto"` for all wrapping text:** body copy, card descriptions, and list items that wrap over more than one line MUST use `lineHeight="auto"` (never a fixed number); in OpenPencil `"auto"` follows the font and text never stacks up. Do not omit it and let it fall back to 1.0. Single-line headings keep 1.1–1.2.
+- **`lineHeight="auto"` for all wrapping text:** body copy, card descriptions, and list items that wrap over more than one line MUST use `lineHeight="auto"` (never a fixed number); in OpenPencil `"auto"` follows the font and text never stacks up. Do not omit it and let it fall back to 1.0. Single-line headings keep a `"110%"`–`"120%"` ratio — a bare number is pixels, never a ratio.
 - **Real content:** every metric, name, or price on the canvas is plausible and internally consistent — never Lorem Ipsum, never invented-styled filler such as "123%" standing in for a real figure. When the brief is short, infer a specific persona or brand and name it; never stay generic.
 - **Nothing clipped:** no text truncated mid-word, chips cut at the container edge, or content overflowing its frame at the size it will be viewed.
 - **Honest reporting:** unresolved font, layout, or fidelity limitations are stated to the user; a broken phone-width layout is not described as responsive.
