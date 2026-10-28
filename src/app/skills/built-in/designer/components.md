@@ -2,7 +2,7 @@
 
 Decide when repeated structures deserve main components and instances instead of clones, and when to
 reuse what the document or a library already ships. This reference is the decision guide; the schema
-detail — element names, the `properties` array, property value grammar, Reka UI control parts — lives
+part (element names, the `properties` array, property value grammar, Reka UI control parts) lives
 in [design-authoring.md](./design-authoring.md), and the verification pass is in
 [checklist.md](./checklist.md).
 
@@ -34,7 +34,7 @@ already exists, reuse it and say so.
 ## Recommendation flow
 
 After rendering a screen, name the repeated elements you would extract, in one short list, and offer
-to convert them — the user decides which become components. When they accept, or the brief calls for
+to convert them; the user decides which become components. When they accept, or the brief calls for
 components from the start:
 
 1. Render the main component and its variants: a `ComponentSet` whose `Component` children carry
