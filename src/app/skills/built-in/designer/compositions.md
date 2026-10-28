@@ -5,9 +5,9 @@ templates: keep the taste rules in SKILL.md (typography, spacing scale, color, i
 every decision. Build one section per `render` call, or replace a whole section with `replace_id`
 once its structure must change, the mechanics are in [render-and-replace.md](./render-and-replace.md).
 
-**Line heights in the examples:** a number is never a line-height ratio in this renderer — `lineHeight={1.1}`
+**Line heights in the examples:** a number is never a line-height ratio in this renderer; `lineHeight={1.1}`
 means 1.1 pixels. Ratios are percent strings: use `lineHeight="110%"`–`"120%"` for single-line headings
-sized so they never wrap. Any text that can wrap — a wide headline, body copy, list rows, quotes — must
+sized so they never wrap. Any text that can wrap (a wide headline, body copy, list rows, quotes) must
 use `lineHeight="auto"` instead (see the Floor rules in SKILL.md and the `auto-line-height` lint rule).
 Do not copy a fixed line height onto wrapping text just because an example here has one.
 

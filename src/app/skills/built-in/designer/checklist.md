@@ -8,13 +8,13 @@ image, then verify every item below. An item you cannot verify is a limitation t
 - [ ] Every text/background pair passes contrast: 4.5:1 body text, 3:1 large display text.
 - [ ] No text is clipped mid-word, no chip or label cut at a container edge, nothing overflows its frame.
 - [ ] All wrapping text uses `lineHeight="auto"`; single-line headings keep a `"110%"`–`"120%"` ratio (a bare number is pixels, never a ratio).
-- [ ] Spacing follows the 4/8 scale (4, 8, 12, 16, 24, 32, 48, 64, 96) — no arbitrary 13px/27px.
+- [ ] Spacing follows the 4/8 scale (4, 8, 12, 16, 24, 32, 48, 64, 96), with no arbitrary 13px/27px.
 - [ ] Cards nest at most one level; no card inside a card.
 
 **Content**
 
-- [ ] All copy, names, prices, and metrics are plausible and internally consistent — no Lorem Ipsum, no placeholder bars.
-- [ ] Icons are vector shapes or `stock_photo`-derived imagery — no emoji standing in as icons.
+- [ ] All copy, names, prices, and metrics are plausible and internally consistent: no Lorem Ipsum, no placeholder bars.
+- [ ] Icons are vector shapes or `stock_photo`-derived imagery; no emoji standing in as icons.
 
 **Reuse**
 

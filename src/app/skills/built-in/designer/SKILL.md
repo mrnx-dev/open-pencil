@@ -33,29 +33,29 @@ You are NOT a template generator. Every design must feel hand-crafted, editorial
 ### Floor
 
 - **Readable text:** every text/background pair keeps a contrast of 4.5:1 (large display text 3:1). Dark gray text on tinted or colored surfaces is unreadable, not moody.
-- **`lineHeight="auto"` for all wrapping text:** body copy, card descriptions, and list items that wrap over more than one line MUST use `lineHeight="auto"` (never a fixed number); in OpenPencil `"auto"` follows the font and text never stacks up. Do not omit it and let it fall back to 1.0. Single-line headings keep a `"110%"`–`"120%"` ratio — a bare number is pixels, never a ratio.
-- **Real content:** every metric, name, or price on the canvas is plausible and internally consistent — never Lorem Ipsum, never invented-styled filler such as "123%" standing in for a real figure. When the brief is short, infer a specific persona or brand and name it; never stay generic.
+- **`lineHeight="auto"` for all wrapping text:** body copy, card descriptions, and list items that wrap over more than one line MUST use `lineHeight="auto"` (never a fixed number); in OpenPencil `"auto"` follows the font and text never stacks up. Do not omit it and let it fall back to 1.0. Single-line headings keep a `"110%"`–`"120%"` ratio (a bare number is pixels, never a ratio).
+- **Real content:** every metric, name, or price on the canvas is plausible and internally consistent: never Lorem Ipsum, never invented-styled filler such as "123%" standing in for a real figure. When the brief is short, infer a specific persona or brand and name it; never stay generic.
 - **Nothing clipped:** no text truncated mid-word, chips cut at the container edge, or content overflowing its frame at the size it will be viewed.
 - **Honest reporting:** unresolved font, layout, or fidelity limitations are stated to the user; a broken phone-width layout is not described as responsive.
 
 ### Reflex
 
 - **Purple hero, default gradients, pastel "assistant" palette:** the trained default look. Derive the palette from the brief or ask; one accent on a neutral base (zinc `#18181B`, stone, neutral) is stronger.
-- **The 3-card feature grid, icon-tile rows:** identical cards with a rounded-square icon-tile above each heading. Compose the section around its actual content instead — asymmetric, editorial grid (12 columns with a breakout).
+- **The 3-card feature grid, icon-tile rows:** identical cards with a rounded-square icon-tile above each heading. Compose the section around its actual content instead: an asymmetric, editorial grid (12 columns with a breakout).
 - **A colored or italic serif word inside the headline, eyebrow labels above headings, tiny tracked uppercase captions:** costume details the model reaches for. Let the type hierarchy carry the emphasis.
-- **Inter for everything:** pair Inter (UI body) with one display serif or geometric face for the hero only — two typefaces total.
+- **Inter for everything:** pair Inter (UI body) with one display serif or geometric face for the hero only; two typefaces total.
 - **Gradients and glows at rest, heavy drop shadows:** gradients only as a neutral scrim over photos. Shadows are soft and subtly colored (accent at 0.08 alpha).
 - **Card in card, borders everywhere:** one-level nesting; separate areas with whitespace and 1px borders at 0.08–0.12 alpha rather than boxing everything.
 - **"Clean and modern" as the design idea:** it is not an idea. Find one sentence that ties the brief to a direction; a dashboard must be opinionated and specific.
 - **Everything centered:** centering is a reflex, not a hierarchy decision.
 
-The standing rules these build from — typography-first hierarchy (tight tracking -1% to -2%, weight 600–700 for headings; body 14–16px, ≤65 chars/line), the 4/8 spacing scale (4, 8, 12, 16, 24, 32, 48, 64, 96 — no arbitrary 13px/27px), OKLCH for subtle tints, and auto-layout with `hug`/`fill` rather than fixed 300px cards — always apply. The machine-made patterns and their substitutes are catalogued in [tells.md](./tells.md).
+The standing rules these build from always apply: typography-first hierarchy (tight tracking -1% to -2%, weight 600–700 for headings; body 14–16px, ≤65 chars/line), the 4/8 spacing scale (4, 8, 12, 16, 24, 32, 48, 64, 96; no arbitrary 13px/27px), OKLCH for subtle tints, and auto-layout with `hug`/`fill` rather than fixed 300px cards. The machine-made patterns and their substitutes are catalogued in [tells.md](./tells.md).
 
 ### Finish
 
-- **One warning, one fix:** a render warning names a prop the renderer dropped, such as `Unknown strokeAlign "bottom"` — that intent is a per-side border, written `strokeWeights={{ bottom: 1 }}`. Fix the named prop and re-render; a design whose intended border silently became a full outline is not done.
+- **One warning, one fix:** a render warning names a prop the renderer dropped, such as `Unknown strokeAlign "bottom"`; that intent is a per-side border, written `strokeWeights={{ bottom: 1 }}`. Fix the named prop and re-render; a design whose intended border silently became a full outline is not done.
 - **Generous whitespace:** more than feels necessary; never cramp content to fit.
-- **Imagery with intent:** real product screenshots and cropped photos with an intentional aspect ratio (4:3, 16:9) over abstract blobs. Use `stock_photo` with specific queries — "minimalist desk with macbook top view" beats "business".
+- **Imagery with intent:** real product screenshots and cropped photos with an intentional aspect ratio (4:3, 16:9) over abstract blobs. Use `stock_photo` with specific queries: "minimalist desk with macbook top view" beats "business".
 - **Coherence over spectacle:** a coherent, editable composition beats showing every effect at once.
 
 ### Direction
