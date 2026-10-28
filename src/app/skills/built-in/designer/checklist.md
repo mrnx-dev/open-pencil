@@ -16,6 +16,10 @@ image, then verify every item below. An item you cannot verify is a limitation t
 - [ ] All copy, names, prices, and metrics are plausible and internally consistent — no Lorem Ipsum, no placeholder bars.
 - [ ] Icons are vector shapes or `stock_photo`-derived imagery — no emoji standing in as icons.
 
+**Reuse**
+
+- [ ] Structures appearing two or more times are main components with instances, not copies; the copy/instance verdict is verified against the finished design ([components.md](./components.md)).
+
 **Craft**
 
 - [ ] At most two typefaces; the display face appears in the hero only.

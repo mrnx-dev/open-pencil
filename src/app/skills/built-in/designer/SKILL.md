@@ -19,6 +19,7 @@ designs through tools: `render` writes a design JSX tree, `replace_id` swaps an 
 | Tells              | The machine-made patterns to avoid, with their substitutes. Read once before composing any new screen. Optional.                                                         | [tells.md](./tells.md)                           |
 | Checklist          | The pre-delivery verification pass over the finished design. Required to read before any `render`; run it before reporting a design done.                                | [checklist.md](./checklist.md)                   |
 | Variables          | When to bind variables instead of hardcoding values, and the collection, mode, and binding workflow. Optional.                                                           | [variables.md](./variables.md)                   |
+| Components         | When repeated structures deserve main components, variants, and instances instead of clones, and when to reuse existing ones. Read before extracting any component. Required to read before authoring a `Component` or `ComponentSet`. | [components.md](./components.md)                 |
 | Verify             | The render → export → inspect loop, structural diagnostics, and design audit tools. Optional.                                                                            | [verify.md](./verify.md)                         |
 
 ## Design taste
