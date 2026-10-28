@@ -2,6 +2,8 @@ import { ALL_TOOLS, CORE_TOOLS, isToolExposed, toolChangesDocument } from '@open
 
 import type { ToolAccessEntry } from '@/app/automation/tool-access/types'
 
+import { readSkillReference } from './skills'
+
 /** Preserve the compact shipped tool set as defaults, not as an availability restriction. */
 const defaultNames = new Set([
   ...CORE_TOOLS.map((tool) => tool.name),
@@ -24,10 +26,19 @@ const defaultNames = new Set([
   // Lets the model look at what it built.
   'export_image',
   'list_pages',
-  'create_page'
+  'create_page',
+  // Skills reference themselves; the model pulls a skill's linked guidance only when it needs it.
+  'read_skill_reference'
 ])
 
-export const aiToolDefinitions = ALL_TOOLS.filter((tool) => isToolExposed(tool, 'ai'))
+// App tools in the same AI surface: the core registry stays headless-safe, while this one reads the
+// browser skill store. Core tools are filtered by name so a future core tool with the same name wins.
+const coreAITools = ALL_TOOLS.filter((tool) => isToolExposed(tool, 'ai'))
+
+export const aiToolDefinitions = [
+  ...coreAITools.filter((tool) => tool.name !== readSkillReference.name),
+  readSkillReference
+]
 
 export const configurableAITools: ToolAccessEntry[] = aiToolDefinitions.map((tool) => ({
   name: tool.name,

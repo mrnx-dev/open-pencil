@@ -1,0 +1,1 @@
+- The renderer reference explains that side names go in `strokeWeights`, not `strokeAlign`, and the designer skill treats render warnings as defects to fix, so a bottom hairline is written as `strokeWeights={{ bottom: 1 }}` instead of falling back to a full outline.

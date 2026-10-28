@@ -19,9 +19,11 @@ afterEach(() => {
 })
 
 test('AI catalog includes exposed extended tools while preserving compact defaults', () => {
-  expect(configurableAITools.map((tool) => tool.name)).toEqual(
-    ALL_TOOLS.filter((tool) => isToolExposed(tool, 'ai')).map((tool) => tool.name)
-  )
+  // The app appends headless-unsafe tools (the browser skill store) to the core AI registry.
+  expect(configurableAITools.map((tool) => tool.name)).toEqual([
+    ...ALL_TOOLS.filter((tool) => isToolExposed(tool, 'ai')).map((tool) => tool.name),
+    'read_skill_reference'
+  ])
   const defaults = enabledAIToolDefinitions({}).map((tool) => tool.name)
   for (const tool of CORE_TOOLS) {
     if (isToolExposed(tool, 'ai')) expect(defaults).toContain(tool.name)
@@ -43,7 +45,8 @@ test('AI catalog includes exposed extended tools while preserving compact defaul
     'lint_fix',
     'export_image',
     'list_pages',
-    'create_page'
+    'create_page',
+    'read_skill_reference'
   ]) {
     expect(defaults).toContain(name)
   }

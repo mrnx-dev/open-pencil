@@ -1,3 +1,5 @@
+import type { TextLength } from '@open-pencil/scene-graph'
+
 export type Severity = 'error' | 'warning' | 'info' | 'off'
 
 export type Category =
@@ -100,6 +102,8 @@ export interface LintNode {
   componentId?: string
   text: string
   fontSize: number
+  /** The layer's fixed line height, or null when it follows the font. */
+  lineHeight?: TextLength | null
   /**
    * The size and weight of every stretch of a text layer's characters: one per style run, and
    * the layer's own where no run covers the text.

@@ -48,6 +48,8 @@
   "ruleTouchTargetSizeHelp": "Pulsanti, link e altri controlli devono essere facili da toccare: almeno 24 × 24 per WCAG AA, 44 × 44 per AAA.",
   "ruleMinTextSize": "Testo piccolo",
   "ruleMinTextSizeHelp": "Il testo sotto i 12 px è difficile da leggere sulla maggior parte degli schermi.",
+  "ruleAutoLineHeight": "Interlinea stretta",
+  "ruleAutoLineHeightHelp": "Il testo che va a capo richiede un’interlinea di almeno 1,1× la dimensione del carattere; «auto» segue il carattere.",
   "ruleConsistentSpacing": "Spaziatura fuori scala",
   "ruleConsistentSpacingHelp": "Spazi e padding dell’auto-layout dovrebbero provenire dalla scala di spaziatura o essere multipli di 4.",
   "detailSpacingGap": "Spazio {value}",

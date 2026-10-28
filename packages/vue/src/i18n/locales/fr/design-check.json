@@ -48,6 +48,8 @@
   "ruleTouchTargetSizeHelp": "Les boutons, liens et autres contrôles doivent être faciles à toucher : au moins 24 × 24 pour WCAG AA, 44 × 44 pour AAA.",
   "ruleMinTextSize": "Texte trop petit",
   "ruleMinTextSizeHelp": "Un texte de moins de 12 px est difficile à lire sur la plupart des écrans.",
+  "ruleAutoLineHeight": "Interligne trop serré",
+  "ruleAutoLineHeightHelp": "Un texte qui passe sur plusieurs lignes demande une interligne d'au moins 1,1× la taille de la police ; « auto » suit la police.",
   "ruleConsistentSpacing": "Espacement hors échelle",
   "ruleConsistentSpacingHelp": "Les espacements et marges intérieures de l’auto-layout doivent venir de l’échelle d’espacement ou être des multiples de 4.",
   "detailSpacingGap": "Espacement {value}",

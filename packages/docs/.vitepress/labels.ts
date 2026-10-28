@@ -17,6 +17,7 @@ export interface SidebarLabels {
   components: string
   variables: string
   checkingDesigns: string
+  skills: string
   openPencilCloud: string
   cloudStorage: string
   overview: string
@@ -171,6 +172,7 @@ export const EN: SidebarLabels = {
   components: 'Components',
   variables: 'Variables',
   checkingDesigns: 'Checking Designs',
+  skills: 'Skills',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Cloud Storage',
   icons: 'Icons',
@@ -201,6 +203,7 @@ export const DE: SidebarLabels = {
   components: 'Komponenten',
   variables: 'Variablen',
   checkingDesigns: 'Designs prüfen',
+  skills: 'Skills',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Cloud-Speicher',
   icons: 'Symbole',
@@ -231,6 +234,7 @@ export const IT: SidebarLabels = {
   components: 'Componenti',
   variables: 'Variabili',
   checkingDesigns: 'Verificare i design',
+  skills: 'Skill',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Archiviazione cloud',
   icons: 'Icone',
@@ -261,6 +265,7 @@ export const FR: SidebarLabels = {
   components: 'Composants',
   variables: 'Variables',
   checkingDesigns: 'Vérifier les designs',
+  skills: 'Compétences',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Stockage cloud',
   icons: 'Icônes',
@@ -291,6 +296,7 @@ export const ES: SidebarLabels = {
   components: 'Componentes',
   variables: 'Variables',
   checkingDesigns: 'Revisar diseños',
+  skills: 'Habilidades',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Almacenamiento en la nube',
   icons: 'Iconos',
@@ -321,6 +327,7 @@ export const PL: SidebarLabels = {
   components: 'Komponenty',
   variables: 'Zmienne',
   checkingDesigns: 'Sprawdzanie projektów',
+  skills: 'Umiejętności',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Przechowywanie w chmurze',
   icons: 'Ikony',
@@ -351,6 +358,7 @@ export const RU: SidebarLabels = {
   components: 'Компоненты',
   variables: 'Переменные',
   checkingDesigns: 'Проверка дизайна',
+  skills: 'Навыки',
   openPencilCloud: 'OpenPencil Cloud',
   cloudStorage: 'Облачное хранилище',
   icons: 'Иконки',

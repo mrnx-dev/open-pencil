@@ -48,6 +48,8 @@
   "ruleTouchTargetSizeHelp": "Los botones, enlaces y otros controles necesitan espacio para tocarlos: al menos 24 × 24 para WCAG AA y 44 × 44 para AAA.",
   "ruleMinTextSize": "Texto pequeño",
   "ruleMinTextSizeHelp": "El texto de menos de 12 px es difícil de leer en la mayoría de las pantallas.",
+  "ruleAutoLineHeight": "Interlineado ajustado",
+  "ruleAutoLineHeightHelp": "El texto que se ajusta a varias líneas necesita un interlineado de al menos 1,1× su tamaño de fuente; «auto» sigue a la fuente.",
   "ruleConsistentSpacing": "Espaciado fuera de escala",
   "ruleConsistentSpacingHelp": "Los espaciados y rellenos del auto-layout deben salir de la escala de espaciado o ser múltiplos de 4.",
   "detailSpacingGap": "Espaciado {value}",

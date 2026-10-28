@@ -90,6 +90,9 @@ scratch/
 # OpenCode
 .opencode/
 
+# Superpowers
+/.superpowers
+
 # Feedback Worker local state and secrets
 packages/feedback/.wrangler/
 packages/feedback/.dev.vars

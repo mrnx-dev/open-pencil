@@ -343,5 +343,19 @@
   "aiSetupAgentMCPStartFailed": "MCP サーバーはインストール済みですが起動しませんでした。OpenPencil を再起動してから、もう一度確認してください。",
   "aiSetupAgentLookupFailed": "このコンピューターを確認できませんでした。もう一度お試しください。",
   "chatAgentWorkingOn": "{agent}が「{page}」で作業中",
-  "chatGoToPage": "ページへ移動"
+  "chatGoToPage": "ページへ移動",
+  "skillsHint": "「/」でスキルを呼び出す",
+  "skillsHeader": "スキル {count}",
+  "skillToggle": "「/」の補完にこのスキルを表示",
+  "skillToggleHidden": "スキルは設定に残りますが、「/」には表示されません",
+  "skillsTitle": "スキル",
+  "skillsDescription": "/ で読み込むフォルダ単位の SKILL.md パッケージ。同梱スキルはアプリとともに更新され、インポートしたスキルは保持されます。",
+  "importSkillFile": "ファイルを追加…",
+  "importSkillFolder": "フォルダーを追加…",
+  "importSkillFailed": "スキルのインポートに失敗しました。",
+  "importSkillEmpty": "そのソースにはスキルが見つかりません。",
+  "deleteSkill": "スキルを削除",
+  "deleteSkillConfirmation": "スキル「{name}」を削除しますか？",
+  "deleteSkillDescription": "このデバイスからスキルと参照ファイルを削除します。同梱スキルは次回アプリ起動時にもう一度追加されます。",
+  "skillReferences": "参照ファイル {count} 件"
 }

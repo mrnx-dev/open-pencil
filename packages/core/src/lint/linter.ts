@@ -55,6 +55,11 @@ export class Linter {
     }
     if (options.config?.rules) baseConfig = { ...baseConfig, ...options.config.rules }
     const rulesToLoad = options.rules ?? Object.keys(baseConfig)
+    const unknown = rulesToLoad.filter((ruleId) => !allRules[ruleId])
+    if (unknown.length > 0)
+      throw new Error(
+        `Unknown lint rule(s): ${unknown.join(', ')}. The loaded build may be stale — rebuild packages first.`
+      )
     for (const ruleId of rulesToLoad) {
       const rule = allRules[ruleId]
       const config = baseConfig[ruleId]
@@ -136,6 +141,7 @@ export class Linter {
       componentId: raw.componentId || undefined,
       text: raw.text,
       fontSize: raw.fontSize,
+      lineHeight: raw.lineHeight,
       textStyles: raw.type === 'TEXT' ? effectiveTextStyles(raw) : undefined,
       styleRunCount: raw.styleRuns.length,
       boundVariables: raw.boundVariables,

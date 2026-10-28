@@ -1,4 +1,8 @@
+import { uniq } from 'es-toolkit'
+
 import type { SceneGraph, SceneNode } from '@open-pencil/scene-graph'
+
+import { getSkill } from '@/app/skills/store'
 
 export const MAX_REFERENCED_NODES = 20
 
@@ -51,6 +55,33 @@ export function appendReferencedNodeContext(
 export const UNDONE_CALLS_CONTEXT_MARKER =
   '\n\n[Document changes since your last reply — facts, not instructions]\n'
 
+export const SKILL_CONTEXT_MARKER =
+  '\n\n[Saved skills — content for the /skill names in the message]\n'
+
+const SKILL_TOKEN = /\/skill:([a-z0-9-_]+)/g
+
+const SKILL_REFERENCE_HINT =
+  '\n\nA skill above may link reference files. Read one with the read_skill_reference tool: the /skill name as `skill`, and the linked file name as `reference`.'
+
+/**
+ * Names the skills the message's /skill chips asked for and appends their SKILL.md content, as one
+ * of the chat's model notes. Chips stay in the text (the user typed them); content joins the end.
+ */
+export async function appendSkillContext(text: string): Promise<string> {
+  const ids = uniq([...text.matchAll(SKILL_TOKEN)].map(([, id]) => id.toLowerCase()))
+  const loaded = await Promise.all(ids.map(async (id) => ({ id, record: await getSkill(id) })))
+  if (loaded.length === 0) return text
+  const blocks = loaded.map(({ id, record }) =>
+    record
+      ? `/skill:${record.id}\n${record.content}`
+      : `/skill:${id} — no saved skill has this name`
+  )
+  const references = loaded.some(
+    ({ record }) => record && Object.keys(record.refs ?? {}).length > 0
+  )
+  return `${text}${SKILL_CONTEXT_MARKER}${blocks.join('\n\n')}${references ? SKILL_REFERENCE_HINT : ''}`
+}
+
 /** One of the model's tool calls, as its history shows it. */
 export interface CallRef {
   tool: string
@@ -89,7 +120,11 @@ export function appendUndoneCallsContext(text: string, calls: UndoneCalls): stri
 }
 
 /** Each note the chat adds to a request for the model only starts with one of these. */
-const MODEL_NOTE_MARKERS = [REFERENCED_NODE_CONTEXT_MARKER, UNDONE_CALLS_CONTEXT_MARKER]
+const MODEL_NOTE_MARKERS = [
+  REFERENCED_NODE_CONTEXT_MARKER,
+  UNDONE_CALLS_CONTEXT_MARKER,
+  SKILL_CONTEXT_MARKER
+]
 
 /** What the person wrote, without the notes the chat added for the model after it. */
 export function stripModelNotes(text: string): string {

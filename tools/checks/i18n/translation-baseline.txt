@@ -515,3 +515,11 @@ pl:shapes.engFolder
 ru:cloud.productName
 ru:cloud.homeCloudOnHost
 ru:cloud.inviteEmailPlaceholder
+de:ai.skillsHeader
+de:ai.skillsTitle
+es:ai.skillsHeader
+es:ai.skillsTitle
+fr:ai.skillsHeader
+fr:ai.skillsTitle
+pl:ai.skillsHeader
+pl:ai.skillsTitle

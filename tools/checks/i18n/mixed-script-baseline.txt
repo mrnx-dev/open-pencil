@@ -142,6 +142,7 @@ ja:credentials.getAPIKey
 ja:credentials.rememberDevice
 ja:designCheck.ruleColorContrastHelp
 ja:designCheck.ruleMinTextSizeHelp
+ja:designCheck.ruleAutoLineHeightHelp
 ja:designCheck.ruleTouchTargetSizeHelp
 ja:diagnostics.acpFailed
 ja:diagnostics.chatCompleted
@@ -366,6 +367,7 @@ zh-cn:credentials.getAPIKey
 zh-cn:credentials.rememberDevice
 zh-cn:designCheck.ruleColorContrastHelp
 zh-cn:designCheck.ruleMinTextSizeHelp
+zh-cn:designCheck.ruleAutoLineHeightHelp
 zh-cn:designCheck.ruleTouchTargetSizeHelp
 zh-cn:diagnostics.acpFailed
 zh-cn:diagnostics.chatCompleted
@@ -544,6 +546,8 @@ zh-cn:cloudPortal.accountId
 zh-cn:cloudPortal.accountIdDescription
 zh-cn:cloudPortal.desktopApp
 zh-cn:cloudPortal.methodDesktop
+ja:ai.skillsDescription
+zh-cn:ai.skillsDescription
 ja:ai.cloudAIUnavailable
 ja:ai.cloudAINoWorkspace
 ja:ai.chatCloudCreditsExhausted

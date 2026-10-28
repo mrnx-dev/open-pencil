@@ -7,6 +7,7 @@ export { default as colorContrast } from './color-contrast'
 export { default as touchTargetSize } from './touch-target-size'
 export { default as textStyleRequired } from './text-style-required'
 export { default as minTextSize } from './min-text-size'
+export { default as autoLineHeight } from './auto-line-height'
 export { default as noHiddenLayers } from './no-hidden-layers'
 export { default as noDeeplyNested } from './no-deeply-nested'
 export { default as noEmptyFrames } from './no-empty-frames'
@@ -18,6 +19,7 @@ export { default as noDetachedInstances } from './no-detached-instances'
 
 import type { Rule } from '#core/lint/types'
 
+import autoLineHeight from './auto-line-height'
 import colorContrast from './color-contrast'
 import consistentRadius from './consistent-radius'
 import consistentSpacing from './consistent-spacing'
@@ -46,6 +48,7 @@ export const allRules: Record<string, Rule> = {
   'touch-target-size': touchTargetSize,
   'text-style-required': textStyleRequired,
   'min-text-size': minTextSize,
+  'auto-line-height': autoLineHeight,
   'no-hidden-layers': noHiddenLayers,
   'no-deeply-nested': noDeeplyNested,
   'no-empty-frames': noEmptyFrames,
