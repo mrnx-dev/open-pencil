@@ -5,7 +5,12 @@ import { computed, nextTick, ref, watch } from 'vue'
 
 import { useI18n } from '@open-pencil/vue/i18n'
 
-import { deleteChipAtCaret, insertSkillChipAtCaret, selectPlainRange } from '@/app/skills/chip'
+import {
+  deleteChipAtCaret,
+  insertSkillChipAtCaret,
+  pastePlainText,
+  selectPlainRange
+} from '@/app/skills/chip'
 import { syncBundledSkills } from '@/app/skills/seed'
 import { detectSlashQuery, suggestSkills, type SkillSuggestion } from '@/app/skills/trigger'
 import IconButton from '@/components/ui/button/IconButton.vue'
@@ -247,6 +252,7 @@ defineExpose({ restoreDraft })
             :data-placeholder="ai.describeChange + ' (' + ai.skillsHint + ')'"
             class="block min-h-12 max-h-40 w-full overflow-y-auto whitespace-pre-wrap bg-transparent px-3 py-2.5 text-xs leading-relaxed outline-none empty:before:text-muted empty:before:content-[attr(data-placeholder)] disabled:opacity-60 [&_span[data-token]]:align-baseline"
             @keydown="handleKeydown"
+            @paste="pastePlainText"
             @input="handleInput"
             @click="updateSuggestions"
             @blur="handleBlur"

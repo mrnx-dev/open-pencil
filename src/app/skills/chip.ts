@@ -103,6 +103,20 @@ export function selectPlainRange(el: HTMLElement, start: number, end: number): b
 }
 
 /**
+ * Pastes clipboard content as plain text into the editable: rich HTML from the clipboard would
+ * otherwise carry its source styling (colored spans, backgrounds) straight into the composer.
+ * True when the event was handled.
+ */
+export function pastePlainText(event: ClipboardEvent): boolean {
+  const editable = event.currentTarget
+  const text = event.clipboardData?.getData('text/plain') ?? ''
+  if (!(editable instanceof HTMLElement) || !text) return false
+  event.preventDefault()
+  document.execCommand('insertText', false, text)
+  return true
+}
+
+/**
  * Backspace handling for chips: with the caret just before a chip node, delete the whole chip
  * instead of splitting it. True when the key was handled.
  */

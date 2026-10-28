@@ -52,7 +52,7 @@ The standing rules these build from — typography-first hierarchy (tight tracki
 
 ### Finish
 
-- **Detail that signals craft:** subtle radii (8–12px cards, 9999px pills), 1px inner shadows, 0.5px strokes, micro-interactions suggested by hover states.
+- **One warning, one fix:** a render warning names a prop the renderer dropped, such as `Unknown strokeAlign "bottom"` — that intent is a per-side border, written `strokeWeights={{ bottom: 1 }}`. Fix the named prop and re-render; a design whose intended border silently became a full outline is not done.
 - **Generous whitespace:** more than feels necessary; never cramp content to fit.
 - **Imagery with intent:** real product screenshots and cropped photos with an intentional aspect ratio (4:3, 16:9) over abstract blobs. Use `stock_photo` with specific queries — "minimalist desk with macbook top view" beats "business".
 - **Coherence over spectacle:** a coherent, editable composition beats showing every effect at once.

@@ -24,6 +24,26 @@ describe('property names', () => {
 })
 
 describe('stack alignment', () => {
+  test('per-side widths give a one-side border, as strokeWeights names them', () => {
+    expect(propsToOverrides({ stroke: '#E4E4E7', strokeWeights: { bottom: 1 } }, false, 'NONE'))
+      .toMatchObject({
+        independentStrokeWeights: true,
+        borderBottomWeight: 1,
+        borderTopWeight: 0,
+        borderRightWeight: 0,
+        borderLeftWeight: 0
+      })
+  })
+
+  test('an unknown strokeAlign falls back to INSIDE, never a CSS side name', () => {
+    const overrides = propsToOverrides(
+      { stroke: '#E4E4E7', strokeAlign: 'bottom' },
+      false,
+      'NONE'
+    )
+    expect(overrides.strokes?.[0]).toMatchObject({ align: 'INSIDE' })
+  })
+
   test('CSS justify and align keywords mean what the short names do', () => {
     expect(
       propsToOverrides({ flex: 'row', justifyContent: 'space-between' }, false, 'NONE')
